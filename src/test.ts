@@ -1,40 +1,40 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
+import { checkChromeCompatibility } from './compatibilityChecker';
+import * as compiler from '@vue/compiler-sfc';
 
-let chromeVersion = 80; // 默认的 Chrome 版本
+function processVueFile(filePath: string) {
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
 
-export function activate(context: vscode.ExtensionContext) {
-  // 创建状态栏项
-  const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-  statusBarItem.text = `Chrome Version: ${chromeVersion}`;
-  statusBarItem.tooltip = 'Click to change Chrome version';
-  statusBarItem.command = 'extension.changeChromeVersion';
-  statusBarItem.show();
+    // 使用 Vue 编译器解析 SFC
+    const { descriptor } = compiler.parse(data);
 
+    if (descriptor.script || descriptor.scriptSetup) {
+      const scriptContent = (descriptor.script?.content || '') + (descriptor.scriptSetup?.content || '');
+      const scriptOffset = descriptor.script?.loc.start.line || 0; // 获取脚本部分的起始行号
 
-  vscode.commands.registerCommand('extension.changeChromeVersion', async (data) => {
-	chromeVersion = data
-    // 命令的实现逻辑
-  })
+      // 执行兼容性检查
+      const diagnostics = checkChromeCompatibility(scriptContent, currentChromeVersion);
 
-  // 将状态栏项加入到扩展的订阅中
-  context.subscriptions.push(statusBarItem);
-
-  // 注册命令来更改 Chrome 版本
-  context.subscriptions.push(
-    vscode.commands.registerCommand('extension.changeChromeVersion', async () => {
-      const input = await vscode.window.showInputBox({
-        prompt: 'Enter the target Chrome version',
-        value: chromeVersion.toString(),
-        validateInput: (value) => isNaN(Number(value)) ? 'Please enter a valid number' : null
+      // 调整诊断信息的行号偏移
+      diagnostics.forEach(diagnostic => {
+        diagnostic.range = new vscode.Range(
+          new vscode.Position(diagnostic.range.start.line + scriptOffset, diagnostic.range.start.character),
+          new vscode.Position(diagnostic.range.end.line + scriptOffset, diagnostic.range.end.character)
+        );
       });
 
-      if (input) {
-        chromeVersion = parseInt(input, 10);
-        statusBarItem.text = `Chrome Version: ${chromeVersion}`;
-        vscode.window.showInformationMessage(`Chrome version set to ${chromeVersion}`);
-      }
-    })
-  );
+      // 在这里处理 diagnostics，例如显示在输出面板或问题面板中
+    }
+  });
 }
 
-export function deactivate() {}
+const currentChromeVersion = 80; // 你可以根据需要动态获取或设置
+
+// 示例用法
+processVueFile(path.join(__dirname, 'example.vue'));
