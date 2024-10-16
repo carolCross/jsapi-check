@@ -42,11 +42,11 @@ function isSupportedInChrome(
   }
 }
 
-// const commonAPIs = [
-//   'Array', 'Object', 'Function', 'String', 'Number', 'Boolean', 'Promise', 'Map', 'Set',
-//   'Date', 'RegExp', 'Math', 'JSON', 'fetch', 'console', 'Error', 'Symbol', 'Intl'
-// ];
-const commonAPIs = ["String", 'Object', "Intl", "Date", "JSON", "Symbol", "Promise", "Boolean", "Function"];
+const commonAPIs = [
+  'Array', 'Object', 'Function', 'String', 'Number', 'Boolean', 'Promise', 'Map', 'Set',
+  'Date', 'RegExp', 'Math', 'JSON', 'fetch', 'console', 'Error', 'Symbol', 'Intl'
+];
+// const commonAPIs = ["String", 'Object', "Intl", "Date", "JSON", "Symbol", "Promise", "Boolean", "Function"];
 /** 获取所有api 列表 */
 function getAllAPIs(
   data: any,

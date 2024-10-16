@@ -1,6 +1,6 @@
 # jsapi-check README
 
-This is the README for your extension "jsapi-check". After writing up a brief description, we recommend including the following sections.
+浏览器兼容性问题排查工具
 
 ## Features
 
