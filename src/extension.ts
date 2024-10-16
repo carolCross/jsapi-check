@@ -3,9 +3,18 @@ import * as vscode from 'vscode';
 // 假设 checkChromeCompatibility 函数已定义在某个模块中
 import { checkChromeCompatibility } from './compatibilityChecker';
 
-let chromeVersion = 80; // 默认的 Chrome 版本
+let chromeVersion = 20; // 默认的 Chrome 版本
 
 export function activate(context: vscode.ExtensionContext) {
+  let disposable = vscode.commands.registerCommand('extension.checkCompatibility', () => {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+      const document = editor.document;
+      updateDiagnostics(document)
+    }
+  });
+  context.subscriptions.push(disposable);
+
   const diagnosticCollection = vscode.languages.createDiagnosticCollection('chrome-compatibility');
 
   // 创建状态栏项
