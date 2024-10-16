@@ -33,6 +33,12 @@
         }
       ]
     },
+    "statusBarItems": {
+      "id": "12",
+      "text": "gzc",
+      "name": "gzc",
+      "alignment": "left"
+    },
     "languages": [
       {
         "id": "javascript",
