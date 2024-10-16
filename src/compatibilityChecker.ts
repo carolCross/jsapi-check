@@ -8,14 +8,17 @@ function isSupportedInChrome(
   apiPath: string,
   version: number = 30
 ): {
+  /** 是否支持 */
   support: boolean;
+  /** mdnUrl  */
+  mdnUrl: boolean;
+  /** 当前版本 */
   version: string[];
 } {
   const supportData = apiPath
     .split(".")
     .reduce((obj: any, key) => obj[key], bcd);
   const chromeSupport = supportData.__compat.support.chrome;
-  console.log("chromeSupport========", chromeSupport);
   if (Array.isArray(chromeSupport)) {
     const reuslt = chromeSupport.some(
       (support) =>
@@ -24,6 +27,7 @@ function isSupportedInChrome(
     );
     return {
       support: reuslt,
+      mdnUrl: supportData.__compat.mdn_url,
       version: chromeSupport.map((support) => support.version_added),
     };
   } else {
@@ -32,6 +36,7 @@ function isSupportedInChrome(
       parseFloat(chromeSupport.version_added) <= version;
     return {
       support: reuslt,
+      mdnUrl: supportData.__compat.mdn_url,
       version: [chromeSupport.version_added],
     };
   }
@@ -41,7 +46,7 @@ function isSupportedInChrome(
 //   'Array', 'Object', 'Function', 'String', 'Number', 'Boolean', 'Promise', 'Map', 'Set',
 //   'Date', 'RegExp', 'Math', 'JSON', 'fetch', 'console', 'Error', 'Symbol', 'Intl'
 // ];
-const commonAPIs = ["String", "Intl"];
+const commonAPIs = ["String", 'Object', "Intl", "Date", "JSON", "Symbol", "Promise", "Boolean", "Function"];
 /** 获取所有api 列表 */
 function getAllAPIs(
   data: any,
@@ -80,10 +85,12 @@ function filterCommonAPIs(allAPIs: APIInfo[]): APIInfo[] {
     const joinArr = api.path.split(".");
     if (joinArr.length > 0) {
       const [first, ...rest] = joinArr;
-      filterData.push({
-        name: rest.join("."),
-        path: api.path,
-      });
+      if (rest.length) {
+        filterData.push({
+          name: rest.join("."),
+          path: api.path,
+        });
+      }
     }
   });
 
@@ -108,10 +115,9 @@ function checkChromeCompatibility(
     path: `javascript.builtins.${item.path}`,
     label: item.path,
   }));
-  // console.log('allAPIs======', apisToCheck);
 
   apisToCheck.forEach((api) => {
-    const { support, version } = isSupportedInChrome(api.path, chromeVersion);
+    const { support, version, mdnUrl } = isSupportedInChrome(api.path, chromeVersion);
     if (!support) {
       const regex = new RegExp(`\\b${api.name}\\b`, "g");
       let match;
@@ -138,7 +144,7 @@ function checkChromeCompatibility(
         );
         const diagnostic = new Diagnostic(
           range,
-          `${api.label} not supported in Chrome ${chromeVersion}, The API is supported in Chrome ${version}. `,
+          `${api.label} not supported in Chrome ${chromeVersion}, The API is supported in Chrome ${version}.[Mdnurl](${mdnUrl})`,
           DiagnosticSeverity.Error
         );
         diagnostics.push(diagnostic);
