@@ -28,6 +28,13 @@ function isSupportedInChrome(apiPath: string, version: number = 30): {
   }
 }
 
+// const commonAPIs = [
+//   'Array', 'Object', 'Function', 'String', 'Number', 'Boolean', 'Promise', 'Map', 'Set',
+//   'Date', 'RegExp', 'Math', 'JSON', 'fetch', 'console', 'Error', 'Symbol', 'Intl'
+// ];
+const commonAPIs = [
+  'String', "Intl"
+];
 /** 获取所有api 列表 */
 function getAllAPIs(data: any, pathPrefix: string = '', visited = new WeakSet()): APIInfo[] {
     // return apiList;
@@ -37,7 +44,10 @@ function getAllAPIs(data: any, pathPrefix: string = '', visited = new WeakSet())
         visited.add(data);
 
         for (const key in data) {
-            if (data[key] && typeof data[key] === 'object' && data[key].__compat) {
+          const title = pathPrefix + key;
+          const joinTitleArray = title.split('.');
+          const hasApi = commonAPIs.some(label => joinTitleArray.includes(label));
+            if (hasApi && data[key] && typeof data[key] === 'object' && data[key].__compat) {
                 apiList.push({ name: pathPrefix + key, path: pathPrefix + key });
             }
             const subPathPrefix = pathPrefix + key + '.';
@@ -49,34 +59,35 @@ function getAllAPIs(data: any, pathPrefix: string = '', visited = new WeakSet())
 }
 
 function filterCommonAPIs(allAPIs: APIInfo[]): APIInfo[] {
-    const commonAPIs = [
-        'Array', 'Object', 'Function', 'String', 'Number', 'Boolean', 'Promise', 'Map', 'Set',
-        'Date', 'RegExp', 'Math', 'JSON', 'fetch', 'console', 'Error', 'Symbol', 'Intl'
-    ];
+    // const commonAPIs = [
+    //     'Array', 'Object', 'Function', 'String', 'Number', 'Boolean', 'Promise', 'Map', 'Set',
+    //     'Date', 'RegExp', 'Math', 'JSON', 'fetch', 'console', 'Error', 'Symbol', 'Intl'
+    // ];
     // const commonAPIs = ['String'];
     const filterData = [] as APIInfo[];
 
-    commonAPIs.forEach(objName => {
+    // commonAPIs.forEach(objName => {
       allAPIs.forEach(api => {
         // const name =  api.name.split('.')?.[0] || '';
-        const isHas = api.path.includes(objName) && objName !== api.path;
+        // const isHas = api.path.includes(objName) && objName !== api.path;
         // const isHas = commonAPIs.some(item => name.includes(item) && item !== api.path);
         const joinArr = api.path.split('.');
-        if (joinArr.length > 0 && isHas) {
+        if (joinArr.length > 0) {
           const [first, ...rest] = joinArr;
           filterData.push({
             name: rest.join('.'),
             path: api.path
-          })
+          });
         }
+      })
         // if (isHas) {
         //   filterData.push({
         //     name: api.name.split('.'),
         //     path: api.path
         //   })
         // }
-      })
-    })
+      // })
+    // })
 
     return filterData
 
@@ -112,9 +123,10 @@ function checkChromeCompatibility(code: string, chromeVersion: number, fileType?
 //   ];
   const apisToCheck = filterApis.map(item => ({
     ...item,
-    path: `javascript.builtins.${item.path}`
+    path: `javascript.builtins.${item.path}`,
+    label: item.path
   }));
-  console.log('allAPIs======', apisToCheck);
+  // console.log('allAPIs======', apisToCheck);
 
   apisToCheck.forEach(api => {
     const { support, version } = isSupportedInChrome(api.path, chromeVersion);
@@ -130,7 +142,7 @@ function checkChromeCompatibility(code: string, chromeVersion: number, fileType?
   
           const endPos = new Position(startPos.line, startPos.character + api.name.length);
           const range = new Range(new Position(startPos.line, startPos.character), endPos);
-          const diagnostic = new Diagnostic(range, `${api.path} not supported in Chrome ${chromeVersion}, The API is supported in Chrome ${version}. `, DiagnosticSeverity.Error);
+          const diagnostic = new Diagnostic(range, `${api.label} not supported in Chrome ${chromeVersion}, The API is supported in Chrome ${version}. `, DiagnosticSeverity.Error);
           diagnostics.push(diagnostic);
         }
     }
