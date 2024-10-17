@@ -15,7 +15,9 @@
     "url": "https://github.com/guizhichao/jsapi-check.git"
   },
   "activationEvents": [
-   "*"
+    "onLanguage:javascript",
+    "onLanguage:typescript",
+    "onLanguage:vue"
   ],
   "main": "./out/extension.js",
   "contributes": {
