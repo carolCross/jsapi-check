@@ -3,10 +3,11 @@
   "displayName": "jsapi-check",
   "description": "A VSCode plugin to check Chrome compatibility",
   "version": "0.0.1",
-  "publisher": "zhichao.gui",
+  "publisher": "cross",
   "engines": {
     "vscode": "^1.94.0"
   },
+  "pricing": "Free",
   "categories": [
     "Other"
   ],
