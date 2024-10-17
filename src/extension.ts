@@ -21,7 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
   const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
   statusBarItem.text = `Chrome Version: ${chromeVersion}`;
   statusBarItem.tooltip = 'Click to change Chrome version';
-  statusBarItem.command = 'extension.changeChromeVersion';
+  statusBarItem.command = 'jsapi_check.changeChromeVersion';
   // 显示状态栏项
   statusBarItem.show();
 
@@ -72,7 +72,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // 注册命令来更改 Chrome 版本
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.changeChromeVersion', async () => {
+    vscode.commands.registerCommand(statusBarItem.command, async () => {
       const input = await vscode.window.showInputBox({
         prompt: 'Enter the target Chrome version',
         value: chromeVersion.toString(),

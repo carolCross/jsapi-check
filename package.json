@@ -24,8 +24,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "extension.checkCompatibility",
-        "title": "Check Chrome Compatibility"
+        "command": "jsapi_check.checkCompatibility",
+        "title": "checkCompatibility"
       }
     ],
     "views": {
@@ -66,7 +66,9 @@
   },
   "dependencies": {
     "@mdn/browser-compat-data": "5.6.7",
-    "@vue/compiler-sfc": "3.5.12",
+    "@vue/compiler-sfc": "3.5.12"
+  },
+  "devDependencies": {
     "@types/vscode": "^1.94.0",
     "@types/mocha": "^10.0.8",
     "@types/node": "20.x",
@@ -76,8 +78,5 @@
     "typescript": "^5.6.2",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1"
-  },
-  "devDependencies": {
-    
   }
 }
