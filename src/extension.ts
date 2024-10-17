@@ -22,6 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
   statusBarItem.text = `Chrome Version: ${chromeVersion}`;
   statusBarItem.tooltip = 'Click to change Chrome version';
   statusBarItem.command = 'extension.changeChromeVersion';
+  // 显示状态栏项
   statusBarItem.show();
 
   context.subscriptions.push(statusBarItem);

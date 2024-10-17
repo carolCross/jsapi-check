@@ -15,7 +15,7 @@
     "url": "https://github.com/guizhichao/jsapi-check.git"
   },
   "activationEvents": [
-    "*"
+   "*"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -32,12 +32,6 @@
           "name": "JS API Check"
         }
       ]
-    },
-    "statusBarItems": {
-      "id": "12",
-      "text": "gzc",
-      "name": "gzc",
-      "alignment": "left"
     },
     "languages": [
       {
