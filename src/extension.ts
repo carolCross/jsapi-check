@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-// 假设 checkChromeCompatibility 函数已定义在某个模块中
+// checkChromeCompatibility 函数已定义在某个模块中
 import { checkChromeCompatibility } from './compatibilityChecker';
 
 let chromeVersion = 20; // 默认的 Chrome 版本
@@ -27,13 +27,14 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(statusBarItem);
 
+  /** 文件类型 */
   function getFileType(fileName: string): string {
-	if (fileName.endsWith('.js')) {return 'js';}
-	if (fileName.endsWith('.ts')) {return 'ts';}
-	if (fileName.endsWith('.vue')) {return 'vue';}
-	if (fileName.endsWith('.tsx')) {return 'tsx';}
-	if (fileName.endsWith('.jsx')) {return 'jsx';}
-	return 'unknown';
+    if (fileName.endsWith('.js')) {return 'js';}
+    if (fileName.endsWith('.ts')) {return 'ts';}
+    if (fileName.endsWith('.vue')) {return 'vue';}
+    if (fileName.endsWith('.tsx')) {return 'tsx';}
+    if (fileName.endsWith('.jsx')) {return 'jsx';}
+    return 'unknown';
   }
   
   function extractScriptFromVue(vueContent: string): string {
