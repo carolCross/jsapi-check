@@ -37,6 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
     return 'unknown';
   }
   
+  /** 处理vue文件 */
   function extractScriptFromVue(vueContent: string): string {
     const scriptMatch = vueContent.match(/<script.*?>([\s\S]*?)<\/script>/);
     return scriptMatch ? scriptMatch[1] : '';
