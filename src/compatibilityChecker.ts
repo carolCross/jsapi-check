@@ -102,6 +102,7 @@ function checkChromeCompatibility(
   chromeVersion: number,
   fileType?: "vue" | string
 ): Diagnostic[] {
+  console.log('fileType----', fileType);
   const diagnostics: Diagnostic[] = [];
   const allAPIs = getAllAPIs(bcd.javascript.builtins);
   const filterApis = filterCommonAPIs(allAPIs);
