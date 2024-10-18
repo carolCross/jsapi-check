@@ -2,7 +2,7 @@
   "name": "jsapi-check",
   "displayName": "jsapi-check",
   "description": "A VSCode plugin to check Chrome compatibility",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "cross",
   "engines": {
     "vscode": "^1.94.0"
@@ -11,9 +11,13 @@
   "categories": [
     "Other"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/guizhichao/jsapi-check.git"
+  "scripts": {
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
   },
   "activationEvents": [
     "onLanguage:javascript",
@@ -24,7 +28,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "jsapi_check.checkCompatibility",
+        "command": "extension.checkCompatibility",
         "title": "checkCompatibility"
       }
     ],
@@ -54,19 +58,13 @@
       }
     ]
   },
-  "scripts": {
-    "vscode:prepublish": "pnpm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "pnpm run compile && pnpm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "vscode-test",
-    "package": "pnpm vsce package --no-dependencies",
-    "publish": "pnpm vsce publish --no-dependencies"
-  },
   "dependencies": {
     "@mdn/browser-compat-data": "5.6.7",
     "@vue/compiler-sfc": "3.5.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/guizhichao/jsapi-check.git"
   },
   "devDependencies": {
     "@types/vscode": "^1.94.0",
