@@ -10,7 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
     const editor = vscode.window.activeTextEditor;
     if (editor) {
       const document = editor.document;
-      updateDiagnostics(document)
+      updateDiagnostics(document);
     }
   });
   context.subscriptions.push(disposable);
@@ -32,20 +32,19 @@ export function activate(context: vscode.ExtensionContext) {
 	if (fileName.endsWith('.ts')) {return 'ts';}
 	if (fileName.endsWith('.vue')) {return 'vue';}
 	if (fileName.endsWith('.tsx')) {return 'tsx';}
+	if (fileName.endsWith('.jsx')) {return 'jsx';}
 	return 'unknown';
   }
   
   function extractScriptFromVue(vueContent: string): string {
-	const scriptMatch = vueContent.match(/<script.*?>([\s\S]*?)<\/script>/);
-	return scriptMatch ? scriptMatch[1] : '';
+    const scriptMatch = vueContent.match(/<script.*?>([\s\S]*?)<\/script>/);
+    return scriptMatch ? scriptMatch[1] : '';
   }
 
   function updateDiagnostics(document: vscode.TextDocument) {
 	const fileName = document.fileName;
+  const languageId =  document.languageId;
 	const fileType = getFileType(fileName);
-
-    // 清除上次的诊断信息
-    // diagnosticCollection.clear();
 
 	diagnosticCollection.set(document.uri, []);
   
