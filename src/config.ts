@@ -1,3 +1,5 @@
+/** 默认版本 */
+export const DefaultVerison = 90; 
 /** 支持语言 */
 export const supportLanguageList = [
     'javascript', 'typescript'

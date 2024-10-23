@@ -33,7 +33,7 @@ export default class StatusBar {
     // 显示状态栏项
     this.statusBarItem.show();
     this.props.context.subscriptions.push(this.statusBarItem);
-    this.initChromeVersion()
+    this.initChromeVersion();
   };
   /**  注册ChromeVerison 版本 */
   initChromeVersion = () => {
