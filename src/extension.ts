@@ -1,10 +1,8 @@
 import * as vscode from 'vscode';
-
-// checkChromeCompatibility 函数已定义在某个模块中
+import StatusBar from './statusBar';
 import { checkChromeCompatibility } from './compatibilityChecker';
-
 let chromeVersion = 20; // 默认的 Chrome 版本
-
+/** 激活 */
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand('extension.checkCompatibility', () => {
     const editor = vscode.window.activeTextEditor;
@@ -17,15 +15,23 @@ export function activate(context: vscode.ExtensionContext) {
 
   const diagnosticCollection = vscode.languages.createDiagnosticCollection('chrome-compatibility');
 
-  // 创建状态栏项
-  const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-  statusBarItem.text = `Chrome Version: ${chromeVersion}`;
-  statusBarItem.tooltip = 'Click to change Chrome version';
-  statusBarItem.command = 'jsapi_check.changeChromeVersion';
-  // 显示状态栏项
-  statusBarItem.show();
+  /** 初始化statusBar */
+  const statusBar = new StatusBar({
+    chromeVersion,
+    context,
+    updateDiagnostics,
+    updateChromeVserion,
+  });
 
-  context.subscriptions.push(statusBarItem);
+  // // 创建状态栏项
+  // const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+  // statusBarItem.text = `Chrome Version: ${chromeVersion}`;
+  // statusBarItem.tooltip = 'Click to change Chrome version';
+  // statusBarItem.command = 'jsapi_check.changeChromeVersion';
+  // // 显示状态栏项
+  // statusBarItem.show();
+
+  // context.subscriptions.push(statusBarItem);
 
   /** 文件类型 */
   function getFileType(fileName: string): string {
@@ -41,6 +47,10 @@ export function activate(context: vscode.ExtensionContext) {
   function extractScriptFromVue(vueContent: string): string {
     const scriptMatch = vueContent.match(/<script.*?>([\s\S]*?)<\/script>/);
     return scriptMatch ? scriptMatch[1] : '';
+  }
+  /** 更新version */
+  function updateChromeVserion(version: number) {
+    chromeVersion = version
   }
 
   function updateDiagnostics(document: vscode.TextDocument) {
@@ -67,29 +77,31 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.workspace.onDidChangeTextDocument(e => updateDiagnostics(e.document)),
     vscode.workspace.onDidCloseTextDocument(doc => diagnosticCollection.delete(doc.uri))
   );
+ // 对当前已打开的文档执行一次检查
+  statusBar.setUpdateDiagnostics();
 
   // 对当前已打开的文档执行一次检查
-  vscode.workspace.textDocuments.forEach(updateDiagnostics);
+  // vscode.workspace.textDocuments.forEach(updateDiagnostics);
 
-  // 注册命令来更改 Chrome 版本
-  context.subscriptions.push(
-    vscode.commands.registerCommand(statusBarItem.command, async () => {
-      const input = await vscode.window.showInputBox({
-        prompt: 'Enter the target Chrome version',
-        value: chromeVersion.toString(),
-        validateInput: (value) => isNaN(Number(value)) ? 'Please enter a valid number' : null
-      });
+  // // 注册命令来更改 Chrome 版本
+  // context.subscriptions.push(
+  //   vscode.commands.registerCommand(statusBarItem.command, async () => {
+  //     const input = await vscode.window.showInputBox({
+  //       prompt: 'Enter the target Chrome version',
+  //       value: chromeVersion.toString(),
+  //       validateInput: (value) => isNaN(Number(value)) ? 'Please enter a valid number' : null
+  //     });
 
-      if (input) {
-        chromeVersion = parseInt(input, 10);
-        statusBarItem.text = `Chrome Version: ${chromeVersion}`;
-        vscode.window.showInformationMessage(`Chrome version set to ${chromeVersion}`);
+  //     if (input) {
+  //       chromeVersion = parseInt(input, 10);
+  //       statusBarItem.text = `Chrome Version: ${chromeVersion}`;
+  //       vscode.window.showInformationMessage(`Chrome version set to ${chromeVersion}`);
 
-        // 更新所有打开文档的诊断
-        vscode.workspace.textDocuments.forEach(updateDiagnostics);
-      }
-    })
-  );
+  //       // 更新所有打开文档的诊断
+  //       vscode.workspace.textDocuments.forEach(updateDiagnostics);
+  //     }
+  //   })
+  // );
 }
 
 export function deactivate() {}
