@@ -100,6 +100,8 @@ function checkChromeCompatibility(
 ): Diagnostic[] {
   console.log('fileType----', fileType);
   const diagnostics: Diagnostic[] = [];
+  const javascript = bcd.javascript;
+  const builtins = javascript.builtins;
   const allAPIs = getAllAPIs(bcd.javascript.builtins);
   const filterApis = filterCommonAPIs(allAPIs);
   //   const apisToCheck =[

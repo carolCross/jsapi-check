@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { DiagnosticCommand, supportLanguageList } from "./config";
 import { checkChromeCompatibility } from "./compatibilityChecker";
 import { chromeVersion } from "./versionControl";
+import './astParse';
 
 /** props */
 type PropsType = {
