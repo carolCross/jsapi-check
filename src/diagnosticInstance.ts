@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
-import { DiagnosticCommand } from "./config";
-import { getFileType } from './utils';
-import { chromeVersion } from './versionControl';
+import { DiagnosticCommand, supportLanguageList } from "./config";
 import { checkChromeCompatibility } from "./compatibilityChecker";
+import { chromeVersion } from "./versionControl";
 
 /** props */
 type PropsType = {
@@ -19,9 +18,8 @@ export default class StatusBar {
   }
   /** 初始化 */
   initDiagnostic = () => {
-    this.diagnosticCollection = vscode.languages.createDiagnosticCollection(
-      DiagnosticCommand
-    );
+    this.diagnosticCollection =
+      vscode.languages.createDiagnosticCollection(DiagnosticCommand);
     this.props.context.subscriptions.push(
       vscode.workspace.onDidOpenTextDocument(this.updateDiagnostics),
       vscode.workspace.onDidChangeTextDocument((e) =>
@@ -34,25 +32,31 @@ export default class StatusBar {
   };
   /** 更新检测 */
   updateDiagnostics = (document: vscode.TextDocument) => {
-    const fileName = document.fileName;
     const languageId = document.languageId;
-    const fileType = getFileType(fileName);
+
+    if (!supportLanguageList.includes(languageId)) {
+      return;
+    }
 
     this.diagnosticCollection.set(document.uri, []);
 
     let code = "";
 
-    if (fileType === "vue") {
+    if (languageId === "vue") {
       code = this.extractScriptFromVue(document.getText());
     } else {
       code = document.getText();
     }
-    const diagnostics = checkChromeCompatibility(code, chromeVersion, fileType);
+    const diagnostics = checkChromeCompatibility(
+      code,
+      chromeVersion,
+      languageId
+    );
     this.diagnosticCollection.set(document.uri, diagnostics);
   };
   /** 处理vue文件 */
-    extractScriptFromVue = (vueContent: string): string => {
-      const scriptMatch = vueContent.match(/<script.*?>([\s\S]*?)<\/script>/);
-      return scriptMatch ? scriptMatch[1] : "";
-    }
+  extractScriptFromVue = (vueContent: string): string => {
+    const scriptMatch = vueContent.match(/<script.*?>([\s\S]*?)<\/script>/);
+    return scriptMatch ? scriptMatch[1] : "";
+  };
 }

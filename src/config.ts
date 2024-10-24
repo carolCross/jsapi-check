@@ -1,8 +1,8 @@
 /** 默认版本 */
 export const DefaultVerison = 90; 
-/** 支持语言 */
+/** 目前支持检测语言 */
 export const supportLanguageList = [
-    'javascript', 'typescript'
+    'javascript', 'typescript', 'typescriptreact', 'vue'
 ];
 /** 默认报错提示指令 */
 export const DiagnosticCommand = "chrome-compatibility";

@@ -1,5 +1,6 @@
 import { Diagnostic, DiagnosticSeverity, Range, Position } from "vscode";
 import bcd from "@mdn/browser-compat-data";
+import { CommonAPIs } from "./config";
 
 type APIInfo = { name: string; path: string };
 
@@ -42,11 +43,6 @@ function isSupportedInChrome(
   }
 }
 
-const commonAPIs = [
-  'Array', 'Object', 'Function', 'String', 'Number', 'Boolean', 'Promise', 'Map', 'Set',
-  'Date', 'RegExp', 'Math', 'JSON', 'fetch', 'console', 'Error', 'Symbol', 'Intl'
-];
-// const commonAPIs = ["String", 'Object', "Intl", "Date", "JSON", "Symbol", "Promise", "Boolean", "Function"];
 /** 获取所有api 列表 */
 function getAllAPIs(
   data: any,
@@ -62,7 +58,7 @@ function getAllAPIs(
     for (const key in data) {
       const title = pathPrefix + key;
       const joinTitleArray = title.split(".");
-      const hasApi = commonAPIs.some((label) => joinTitleArray.includes(label));
+      const hasApi = CommonAPIs.some((label) => joinTitleArray.includes(label));
       if (
         hasApi &&
         data[key] &&
