@@ -4,6 +4,8 @@ export const DefaultVerison = 90;
 export const supportLanguageList = [
     'javascript', 'typescript'
 ];
+/** 默认报错提示指令 */
+export const DiagnosticCommand = "chrome-compatibility";
 /** 底部状态栏标题 */
 export const BarText = 'Chrome Version: ';
 /** 底部状态栏tooltip */

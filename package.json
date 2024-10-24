@@ -2,7 +2,7 @@
   "name": "jsapi-check",
   "displayName": "jsapi-check",
   "description": "A VSCode plugin to check Chrome compatibility",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher": "cross",
   "engines": {
     "vscode": "^1.94.0"
