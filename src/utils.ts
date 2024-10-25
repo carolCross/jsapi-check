@@ -1,20 +1,10 @@
+import { CommonAPIs } from "./config";
 
-  /** 文件类型 */
-  export function getFileType(fileName: string): string {
-    if (fileName.endsWith(".js")) {
-      return "js";
-    }
-    if (fileName.endsWith(".ts")) {
-      return "ts";
-    }
-    if (fileName.endsWith(".vue")) {
-      return "vue";
-    }
-    if (fileName.endsWith(".tsx")) {
-      return "tsx";
-    }
-    if (fileName.endsWith(".jsx")) {
-      return "jsx";
-    }
-    return "unknown";
+/** 是否支持当前Api */
+export const isSupportApi = (fieldType: string): boolean => {
+  if (!fieldType) {
+    return false;
   }
+  const firstApi = fieldType.split(".")?.[0] || "unknow";
+  return CommonAPIs.includes(firstApi);
+};

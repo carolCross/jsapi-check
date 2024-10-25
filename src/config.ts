@@ -12,6 +12,6 @@ export const BarText = 'Chrome Version: ';
 export const BarTooltip = 'Click to change Chrome version';
 /** 底部状态栏command */
 export const BarCommand = 'jsapi_check.changeChromeVersion';
-
+/** 当前支持检测类型 */
 export const CommonAPIs = [ 'Array', 'Object', 'Function', 'String', 'Number', 'Boolean', 'Promise', 'Map', 'Set',
     'Date', 'RegExp', 'Math', 'JSON', 'fetch', 'console', 'Error', 'Symbol', 'Intl']

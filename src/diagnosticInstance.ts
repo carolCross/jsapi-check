@@ -1,8 +1,6 @@
 import * as vscode from "vscode";
 import { DiagnosticCommand, supportLanguageList } from "./config";
-import { checkChromeCompatibility } from "./compatibilityChecker";
-import { chromeVersion } from "./versionControl";
-import './astParse';
+import {analyzeCode} from './astParse';
 
 /** props */
 type PropsType = {
@@ -48,11 +46,12 @@ export default class StatusBar {
     } else {
       code = document.getText();
     }
-    const diagnostics = checkChromeCompatibility(
-      code,
-      chromeVersion,
-      languageId
-    );
+    const diagnostics = analyzeCode(code);
+    // const diagnostics = checkChromeCompatibility(
+    //   code,
+    //   chromeVersion,
+    //   // languageId
+    // );
     this.diagnosticCollection.set(document.uri, diagnostics);
   };
   /** 处理vue文件 */
