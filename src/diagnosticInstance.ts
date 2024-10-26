@@ -47,11 +47,6 @@ export default class StatusBar {
       code = document.getText();
     }
     const diagnostics = analyzeCode(code);
-    // const diagnostics = checkChromeCompatibility(
-    //   code,
-    //   chromeVersion,
-    //   // languageId
-    // );
     this.diagnosticCollection.set(document.uri, diagnostics);
   };
   /** 处理vue文件 */
