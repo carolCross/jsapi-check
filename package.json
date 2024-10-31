@@ -26,12 +26,6 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "extension.checkCompatibility",
-        "title": "checkCompatibility"
-      }
-    ],
     "views": {
       "explorer": [
         {

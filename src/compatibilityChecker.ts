@@ -119,71 +119,62 @@ function getAllUseApiList() {
 }
 
 /** poi => position */
-function generatePoiRange (code: CodePoi) {
-  const startPoi = new Position(
-    code.start.x -1 ,
-    code.start.y
-  );
-  const endPoi = new Position(
-    code.end.x - 1,
-    code.end.y
-  );
-  const range = new Range(
-    startPoi,
-    endPoi
-  );
-  return range
+function generatePoiRange(code: CodePoi) {
+  const startPoi = new Position(code.start.x - 1, code.start.y);
+  const endPoi = new Position(code.end.x - 1, code.end.y);
+  const range = new Range(startPoi, endPoi);
+  return range;
 }
 
- /**
-   * 字符串去匹配
-   */
- function getDiagnosticByRegExp (code: string,
+/**
+ * 字符串去匹配
+ */
+function getDiagnosticByRegExp(
+  code: string,
   api: {
-        path: string;
-        label: string;
-        name: string;
-      }
-   ): CodePoi | undefined {
+    path: string;
+    label: string;
+    name: string;
+  }
+): CodePoi | undefined {
   const regex = new RegExp(`\\b${api.name}\\b`, "g");
-    let match;
-    while ((match = regex.exec(code)) !== null) {
-      const codeResult = code.substr(0, match.index).split("\n");
-      const startPos = codeResult.reduce(
-        (acc, line) => {
-          acc.line++;
-          acc.character = line.length;
-          return acc;
-        },
-        { line: 0, character: 0 }
-      );
-     
-      const param = {
-        start: {
-          x: startPos.line - 1,
-          y:  startPos.character,
-        },
-        end: {
-          x: startPos.line - 1,
-          y:  startPos.character + api.name.length,
-        }
-      };
-      return param;
-    }
-    return undefined;
+  let match;
+  while ((match = regex.exec(code)) !== null) {
+    const codeResult = code.substr(0, match.index).split("\n");
+    const startPos = codeResult.reduce(
+      (acc, line) => {
+        acc.line++;
+        acc.character = line.length;
+        return acc;
+      },
+      { line: 0, character: 0 }
+    );
+
+    const param = {
+      start: {
+        x: startPos.line - 1,
+        y: startPos.character,
+      },
+      end: {
+        x: startPos.line - 1,
+        y: startPos.character + api.name.length,
+      },
+    };
+    return param;
+  }
+  return undefined;
 }
 
 type TypeDiagnosticsApi = {
   path: string;
   label: string;
   name: string;
-}
+};
 
 /** 展示vscode提示错误信息 */
 function showDiagnostics(
   code: string,
-  api: TypeDiagnosticsApi
-    | undefined,
+  api: TypeDiagnosticsApi | undefined,
   /** 代码高亮位置 如果未传则用字符串兜底去匹配 */
   codePoi?: CodePoi
 ): Diagnostic | undefined | void {
@@ -195,21 +186,21 @@ function showDiagnostics(
     chromeVersion
   );
   if (!support) {
-    function getDiagnostic (codePoi: CodePoi, api: TypeDiagnosticsApi) {
-      if (!codePoi) return console.error('codePoi is null !');
+    function getDiagnostic(codePoi: CodePoi, api: TypeDiagnosticsApi) {
+      if (!codePoi) return console.error("codePoi is null !");
       const range = generatePoiRange(codePoi);
-      return  new Diagnostic(
+      return new Diagnostic(
         range,
         `${api.label} not supported in Chrome ${chromeVersion}, The API is supported in Chrome ${version}.[Mdnurl](${mdnUrl})`,
         DiagnosticSeverity.Error
       );
     }
     if (codePoi) {
-      return getDiagnostic(codePoi, api)
+      return getDiagnostic(codePoi, api);
     } else {
       const codePoi = getDiagnosticByRegExp(code, api);
-      if (!codePoi) return
-      return getDiagnostic(codePoi, api)
+      if (!codePoi) return;
+      return getDiagnostic(codePoi, api);
     }
   }
 }
