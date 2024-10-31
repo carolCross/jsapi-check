@@ -1,71 +1,51 @@
-# jsapi-check README
+# JSAPI-Check for VS Code
 
-浏览器兼容性问题排查工具
+JSAPI-Check 是一个为 Visual Studio Code 开发的插件，它帮助开发者识别并解决 JavaScript 代码中可能存在的浏览器兼容性问题。
 
-## Features
+## 功能
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **浏览器兼容性检查**：自动分析你的 JavaScript 代码，标识出可能不被所有目标浏览器支持的 API。
+- - **支持不同chrome浏览器切换**：在 VS Code 问题窗口中直接显示不兼容的 API 以及相关的 MDN 文档链接。
+- **详细问题报告**：在 VS Code 问题窗口中直接显示不兼容的 API 以及相关的 MDN 文档链接。
 
-For example if there is an image subfolder under your extension project workspace:
+## 界面
 
-\!\[feature X\]\(images/feature-x.png\)
+![alt text](image-1.png)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+![alt text](image.png)
 
-## Requirements
+![alt text](image-2.png)
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+## 安装
 
-## Extension Settings
+你可以通过以下方式安装 JSAPI-Check 插件：
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+### 通过 Visual Studio Code Marketplace
 
-For example:
+1. 打开 VS Code。
+2. 转到 Extensions 视图（视图 -> 扩展或使用 `Ctrl+Shift+X` 快捷键）。
+3. 在搜索框中输入 "JSAPI-Check"。
+4. 找到 JSAPI-Check 插件，点击安装。
 
-This extension contributes the following settings:
+### 通过 VSIX 文件
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+如果你有 JSAPI-Check 的 `.vsix` 文件：
+1. 打开 VS Code。
+2. 转到 Extensions 视图。
+3. 点击 `...` 更多操作菜单，选择 "Install from VSIX..."。
+4. 选择你的 `.vsix` 文件并安装。
 
-## Known Issues
+## 使用方法
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+安装插件后，JSAPI-Check 将自动在你打开的 JavaScript 文件中运行。如果发现任何兼容性问题，它们将显示在“问题”面板中。
 
-## Release Notes
+你可以点击问题描述旁边的链接，查看更多关于不兼容 API 的详细信息和可能的解决方案。
 
-Users appreciate release notes as you update your extension.
 
-### 1.0.0
+## 设置
 
-Initial release of ...
+你可以通过修改 VS Code 设置来调整 JSAPI-Check 的行为：
 
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+```json
+"jsapiCheck.enable": true,
+"jsapiCheck.targetBrowsers": ["last 2 versions", "not IE 11"]
