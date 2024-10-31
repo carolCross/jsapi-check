@@ -1,7 +1,7 @@
 import { Diagnostic } from "vscode";
 import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
-import dealNewExpression from './ast/newExpression';
+import dealNewExpression, { CalleeType } from './ast/newExpression';
 // import dealVariableDeclarator from './ast/variableDeclarator';
 import dealCallExpression from './ast/callExpression';
 
@@ -21,9 +21,9 @@ export function analyzeCode(code: string) {
 
   traverse(ast, {
     // 处理所有new方法调用表达式
-    NewExpression: path => dealNewExpression(path, code, diagnosticsCallBack),
+    NewExpression: (path: CalleeType) => dealNewExpression(path, code, diagnosticsCallBack),
     // 分析方法调用表达式
-    CallExpression: path => dealCallExpression(path, code, diagnosticsCallBack),
+    CallExpression: (path: CalleeType) => dealCallExpression(path, code, diagnosticsCallBack),
   });
   
   return diagnosticsList;

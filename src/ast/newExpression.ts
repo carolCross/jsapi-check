@@ -1,8 +1,8 @@
-import { Expression, SourceLocation } from '@babel/types';
+import { Expression } from '@babel/types';
 import { isSupportApi, locToCodePoi } from '../utils';
 import { checkChromeCompatibility } from '../compatibilityChecker';
 
-type CalleeType = {
+export type CalleeType = {
     node: {
         callee: {
             object: {
