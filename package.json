@@ -21,8 +21,7 @@
   },
   "activationEvents": [
     "onLanguage:javascript",
-    "onLanguage:typescript",
-    "onLanguage:vue"
+    "onLanguage:typescript"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -64,18 +63,6 @@
           "tsx",
           "TS"
         ]
-      },
-      {
-        "id": "vue",
-        "extensions": [
-          ".vue",
-          ".VUE"
-        ],
-        "aliases": [
-          "vue",
-          "vue",
-          "Vue"
-        ]
       }
     ]
   },
@@ -83,8 +70,7 @@
     "@babel/parser": "^7.25.9",
     "@babel/traverse": "^7.25.9",
     "@babel/types": "^7.25.9",
-    "@mdn/browser-compat-data": "5.6.7",
-    "@vue/compiler-sfc": "3.5.12"
+    "@mdn/browser-compat-data": "5.6.7"
   },
   "repository": {
     "type": "git",
