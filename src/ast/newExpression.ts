@@ -1,7 +1,6 @@
-import { Expression } from '@babel/types';
-import { isSupportApi } from '../utils';
+import { Expression, SourceLocation } from '@babel/types';
+import { isSupportApi, locToCodePoi } from '../utils';
 import { checkChromeCompatibility } from '../compatibilityChecker';
-// import { chromeVersion } from '../versionControl';
 
 type CalleeType = {
     node: {
@@ -27,7 +26,11 @@ function dealNewExpression (path: CalleeType, code: string, callBack: (diagnosti
     }
     const isSupport = isSupportApi(typeName);
     if (isSupport) {
-       const diagnostics  = checkChromeCompatibility(code, typeName);
+        const codePoi = locToCodePoi(callee?.loc);
+        let diagnostics
+        if (codePoi) {
+            diagnostics  = checkChromeCompatibility(code, typeName, codePoi);
+        }
        callBack && callBack(diagnostics);
     }
 }

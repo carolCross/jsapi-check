@@ -13,7 +13,7 @@ export function analyzeCode(code: string) {
 
   const diagnosticsList = [] as Diagnostic[];
   /** 处理回调diagnostic列表 */
-  function diagnosticsCallBack (diagnostic: Diagnostic) {
+  function diagnosticsCallBack (diagnostic?: Diagnostic) {
     if (diagnostic) {
       diagnosticsList.push(diagnostic); 
     }

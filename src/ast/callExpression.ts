@@ -1,5 +1,6 @@
+import { Diagnostic } from "vscode";
 import { Expression } from '@babel/types';
-import { isSupportApi } from '../utils';
+import { isSupportApi, locToCodePoi } from '../utils';
 import { checkChromeCompatibility } from '../compatibilityChecker';
 
 type CalleeType = {
@@ -43,7 +44,7 @@ function getFieldTypeVariableDeclaratorType (type: string) {
 }
 
 /** 处理所有 分析方法调用表达式 */
-function dealVariableDeclarator (path: CalleeType, code: string, callBack: (diagnostics: any) => any) {
+function dealVariableDeclarator (path: CalleeType, code: string, callBack: (diagnostics?: Diagnostic) => any) {
     const { callee } = path.node;
     if (
       callee.type === "MemberExpression"
@@ -73,7 +74,11 @@ function dealVariableDeclarator (path: CalleeType, code: string, callBack: (diag
 
       const isSupport = isSupportApi(fullTypeName);
       if (isSupport) {
-         const diagnostics  = checkChromeCompatibility(code, fullTypeName);
+        const codePoi = locToCodePoi(callee?.loc);
+        let diagnostics
+        if (codePoi) {
+          diagnostics  = checkChromeCompatibility(code, fullTypeName, codePoi);
+         }
          callBack && callBack(diagnostics);
       }
 

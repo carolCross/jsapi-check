@@ -1,7 +1,8 @@
-import { Diagnostic, DiagnosticSeverity, Range, Position, } from "vscode";
+import { Diagnostic, DiagnosticSeverity, Range, Position } from "vscode";
 import bcd from "@mdn/browser-compat-data";
+import { SourceLocation } from "@babel/types";
 import { CommonAPIs } from "./config";
-import { chromeVersion } from './versionControl';
+import { chromeVersion } from "./versionControl";
 
 type APIInfo = { name: string; path: string };
 
@@ -95,12 +96,16 @@ function filterCommonAPIs(allAPIs: APIInfo[]): APIInfo[] {
 }
 
 // `startPos` 和 `endPos` 是字符在字符串中的索引位置
-function pickTextStartEndPoi (fullText: string, startPos: Record<'character', number>, endPos: Record<'character', number>) {
+function pickTextStartEndPoi(
+  fullText: string,
+  startPos: Record<"character", number>,
+  endPos: Record<"character", number>
+) {
   return fullText.substring(startPos.character, endPos.character);
 }
 
 /** 获取所有 可用的useApiList 排除为支持的api列表 */
-function getAllUseApiList () {
+function getAllUseApiList() {
   const javascript = bcd.javascript;
   const builtins = javascript.builtins;
   const allAPIs = getAllAPIs(builtins);
@@ -113,164 +118,113 @@ function getAllUseApiList () {
   return apiLists;
 }
 
-// const diagnostics: Diagnostic;
+/** poi => position */
+function generatePoiRange (code: CodePoi) {
+  const startPoi = new Position(
+    code.start.x -1 ,
+    code.start.y
+  );
+  const endPoi = new Position(
+    code.end.x - 1,
+    code.end.y
+  );
+  const range = new Range(
+    startPoi,
+    endPoi
+  );
+  return range
+}
 
-/** 展示vscode提示错误信息 */
-function showDiagnostics (code: string, api: {
+ /**
+   * 字符串去匹配
+   */
+ function getDiagnosticByRegExp (code: string,
+  api: {
+        path: string;
+        label: string;
+        name: string;
+      }
+   ): CodePoi | undefined {
+  const regex = new RegExp(`\\b${api.name}\\b`, "g");
+    let match;
+    while ((match = regex.exec(code)) !== null) {
+      const codeResult = code.substr(0, match.index).split("\n");
+      const startPos = codeResult.reduce(
+        (acc, line) => {
+          acc.line++;
+          acc.character = line.length;
+          return acc;
+        },
+        { line: 0, character: 0 }
+      );
+     
+      const param = {
+        start: {
+          x: startPos.line - 1,
+          y:  startPos.character,
+        },
+        end: {
+          x: startPos.line - 1,
+          y:  startPos.character + api.name.length,
+        }
+      };
+      return param;
+    }
+    return undefined;
+}
+
+type TypeDiagnosticsApi = {
   path: string;
   label: string;
   name: string;
-} | undefined): Diagnostic | undefined | void {
-  if (!api) return console.warn('未找到api======', api);
-  const { support, version, mdnUrl } = isSupportedInChrome(api.path, chromeVersion);
+}
+
+/** 展示vscode提示错误信息 */
+function showDiagnostics(
+  code: string,
+  api: TypeDiagnosticsApi
+    | undefined,
+  /** 代码高亮位置 如果未传则用字符串兜底去匹配 */
+  codePoi?: CodePoi
+): Diagnostic | undefined | void {
+  if (!api) {
+    return console.warn("未找到api======", api);
+  }
+  const { support, version, mdnUrl } = isSupportedInChrome(
+    api.path,
+    chromeVersion
+  );
   if (!support) {
-    const regex = new RegExp(`\\b${api.name}\\b`, "g");
-    let match;
-    while ((match = regex.exec(code)) !== null) {
-      const codeResult  = code.substr(0, match.index)
-      .split("\n")
-      console.log('codeResult======', codeResult);
-      const startPos = codeResult
-        .reduce(
-          (acc, line) => {
-            acc.line++;
-            acc.character = line.length;
-            return acc;
-          },
-          { line: 0, character: 0 }
-        );
-  
-      // console.log('startPos======', startPos);
-      const endPos = new Position(
-        startPos.line - 1,
-        startPos.character + api.name.length
-      );
-      const range = new Range(
-        new Position(startPos.line - 1, startPos.character),
-        endPos
-      );
-      // const starCode = pickTextStartEndPoi(code, startPos, endPos);
-      // console.log('starCode=======', starCode);
-      const diagnostic = new Diagnostic(
+    function getDiagnostic (codePoi: CodePoi, api: TypeDiagnosticsApi) {
+      if (!codePoi) return console.error('codePoi is null !');
+      const range = generatePoiRange(codePoi);
+      return  new Diagnostic(
         range,
         `${api.label} not supported in Chrome ${chromeVersion}, The API is supported in Chrome ${version}.[Mdnurl](${mdnUrl})`,
         DiagnosticSeverity.Error
       );
-      return diagnostic
-      // diagnostics.push(diagnostic);
+    }
+    if (codePoi) {
+      return getDiagnostic(codePoi, api)
+    } else {
+      const codePoi = getDiagnosticByRegExp(code, api);
+      if (!codePoi) return
+      return getDiagnostic(codePoi, api)
     }
   }
 }
 
+/** 检测浏览器兼容性 */
 function checkChromeCompatibility(
   code: string,
-  typeName?: string
-  // chromeVersion: number,
-  // fileType?: "vue" | string
+  typeName: string,
+  /** 代码高亮位置 */
+  codePoi: CodePoi
 ): Diagnostic {
-  // const diagnostics: Diagnostic[] = [];
-  // const javascript = bcd.javascript;
-  // const builtins = javascript.builtins;
-  // const allAPIs = getAllAPIs(builtins);
-  // const filterApis = filterCommonAPIs(allAPIs);
-  // //   const apisToCheck =[
-  // //     { name: 'matchAll', path: 'javascript.builtins.String.matchAll' },
-  // //     { name: 'includes', path: 'javascript.builtins.String.includes' },
-  // //     // 添加其他需要检查的 API
-  // //   ];
-  // const apisToCheck = filterApis.map((item) => ({
-  //   ...item,
-  //   path: `javascript.builtins.${item.path}`,
-  //   label: item.path,
-  // }));
   const apisToCheck = getAllUseApiList();
-  const api = apisToCheck.find(item => item.label === typeName);
-  const diagnostic = showDiagnostics(code, api);
+  const api = apisToCheck.find((item) => item.label === typeName);
+  const diagnostic = showDiagnostics(code, api, codePoi);
   return diagnostic as Diagnostic;
-  // if (api) {
-  //   // const { support, version, mdnUrl } = isSupportedInChrome(api.path, chromeVersion);
-  //   // if (!support) {
-  //   //   const regex = new RegExp(`\\b${api.name}\\b`, "g");
-  //   //   let match;
-  //   //   while ((match = regex.exec(code)) !== null) {
-  //   //     const codeResult  = code.substr(0, match.index)
-  //   //     .split("\n")
-  //   //     console.log('codeResult======', codeResult);
-  //   //     const startPos = codeResult
-  //   //       .reduce(
-  //   //         (acc, line) => {
-  //   //           acc.line++;
-  //   //           acc.character = line.length;
-  //   //           return acc;
-  //   //         },
-  //   //         { line: 0, character: 0 }
-  //   //       );
-
-  //   //     // console.log('startPos======', startPos);
-  //   //     const endPos = new Position(
-  //   //       startPos.line - 1,
-  //   //       startPos.character + api.name.length
-  //   //     );
-  //   //     const range = new Range(
-  //   //       new Position(startPos.line - 1, startPos.character),
-  //   //       endPos
-  //   //     );
-  //   //     const starCode = pickTextStartEndPoi(code, startPos, endPos);
-  //   //     console.log('starCode=======', starCode);
-  //   //     const diagnostic = new Diagnostic(
-  //   //       range,
-  //   //       `${api.label} not supported in Chrome ${chromeVersion}, The API is supported in Chrome ${version}.[Mdnurl](${mdnUrl})`,
-  //   //       DiagnosticSeverity.Error
-  //   //     );
-  //   //     diagnostics.push(diagnostic);
-  //   //   }
-  //   // }
-  //   // return console.log('typeName====', typeName, findSupportFun);
-  // }
-  // return
-  // console.log('apisToCheck=======', apisToCheck);
-
-  // apisToCheck.forEach((api) => {
-  //   const { support, version, mdnUrl } = isSupportedInChrome(api.path, chromeVersion);
-  //   if (!support) {
-  //     const regex = new RegExp(`\\b${api.name}\\b`, "g");
-  //     let match;
-  //     while ((match = regex.exec(code)) !== null) {
-  //       const codeResult  = code.substr(0, match.index)
-  //       .split("\n")
-  //       console.log('codeResult======', codeResult);
-  //       const startPos = codeResult
-  //         .reduce(
-  //           (acc, line) => {
-  //             acc.line++;
-  //             acc.character = line.length;
-  //             return acc;
-  //           },
-  //           { line: 0, character: 0 }
-  //         );
-
-  //       // console.log('startPos======', startPos);
-  //       const endPos = new Position(
-  //         startPos.line - 1,
-  //         startPos.character + api.name.length
-  //       );
-  //       const range = new Range(
-  //         new Position(startPos.line - 1, startPos.character),
-  //         endPos
-  //       );
-  //       const starCode = pickTextStartEndPoi(code, startPos, endPos);
-  //       console.log('starCode=======', starCode);
-  //       const diagnostic = new Diagnostic(
-  //         range,
-  //         `${api.label} not supported in Chrome ${chromeVersion}, The API is supported in Chrome ${version}.[Mdnurl](${mdnUrl})`,
-  //         DiagnosticSeverity.Error
-  //       );
-  //       diagnostics.push(diagnostic);
-  //     }
-  //   }
-  // });
-
-  // return diagnostics;
 }
 
 export { checkChromeCompatibility };
