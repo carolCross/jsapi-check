@@ -44,7 +44,7 @@ function getFieldTypeVariableDeclaratorType (type: string) {
 }
 
 /** 处理所有 分析方法调用表达式 */
-function dealVariableDeclarator (path: CalleeType, code: string, callBack: (diagnostics?: Diagnostic) => any) {
+function dealVariableDeclarator (path: CalleeType, code: string, callBack: (diagnostics?: Diagnostic) => any | undefined) {
     const { callee } = path.node;
     if (
       callee.type === "MemberExpression"
@@ -68,7 +68,7 @@ function dealVariableDeclarator (path: CalleeType, code: string, callBack: (diag
         parentType = getFieldTypeVariableDeclaratorType(objectNode.type);
       }
 
-      if (parentType === 'unknown') return false
+      if (parentType === 'unknown') return 
 
       const fullTypeName = `${parentType}.${typeName}`;
 
