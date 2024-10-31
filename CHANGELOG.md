@@ -1,11 +1,15 @@
 # Change Log
 
-All notable changes to the "jsapi" extension will be documented in this file.
+##  A VSCode plugin to check Chrome compatibility
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
+## [released]
 ### Added
 
+- v0.0.6 支持jsapi 精确代码检测
+- v0.0.6 core 支持 new APi 与 js 执行版本检测
+
+## [released]
+### Added
 - v0.0.4 支持jsapi代码检测
 - v0.0.4 支持切换chrome 版本
+
