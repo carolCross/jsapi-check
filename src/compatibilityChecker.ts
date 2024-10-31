@@ -116,11 +116,11 @@ function getAllUseApiList () {
 // const diagnostics: Diagnostic;
 
 /** 展示vscode提示错误信息 */
-function showDiagnostics (code: string, api?: {
+function showDiagnostics (code: string, api: {
   path: string;
   label: string;
   name: string;
-}): Diagnostic | undefined | void {
+} | undefined): Diagnostic | undefined | void {
   if (!api) return console.warn('未找到api======', api);
   const { support, version, mdnUrl } = isSupportedInChrome(api.path, chromeVersion);
   if (!support) {
@@ -186,7 +186,7 @@ function checkChromeCompatibility(
   const apisToCheck = getAllUseApiList();
   const api = apisToCheck.find(item => item.label === typeName);
   const diagnostic = showDiagnostics(code, api);
-  return diagnostic as Diagnostic
+  return diagnostic as Diagnostic;
   // if (api) {
   //   // const { support, version, mdnUrl } = isSupportedInChrome(api.path, chromeVersion);
   //   // if (!support) {

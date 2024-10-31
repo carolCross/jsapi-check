@@ -43,7 +43,7 @@ function getFieldTypeVariableDeclaratorType (type: string) {
 }
 
 /** 处理所有 分析方法调用表达式 */
-function dealVariableDeclarator (path: CalleeType, code: string, callBack: (diagnostics: any) => void) {
+function dealVariableDeclarator (path: CalleeType, code: string, callBack: (diagnostics: any) => any) {
     const { callee } = path.node;
     if (
       callee.type === "MemberExpression"
@@ -53,9 +53,8 @@ function dealVariableDeclarator (path: CalleeType, code: string, callBack: (diag
       const objectNode = callee.object;
       const objectType = objectNode.type;
       let parentType;
-      // 如果是标识符，我们需要查找更多信息，可能需要查看该标识符的绑定信息 最重要的内容
+      // 如果是标识符查看该标识符的绑定信息 最重要的内容
       if (objectType === 'Identifier') {
-        // 如果是标识符，我们需要查找更多信息，可能需要查看该标识符的绑定信息 最重要的内容
         const binding = path.scope.getBinding(objectNode.name);
         if (
           binding &&
@@ -68,13 +67,23 @@ function dealVariableDeclarator (path: CalleeType, code: string, callBack: (diag
         parentType = getFieldTypeVariableDeclaratorType(objectNode.type);
       }
 
-      console.log(`${typeName} type: ${parentType}`);
+      if (parentType === 'unknown') return false
 
-      // 进一步分析，比如检查参数等
-      if (path.node.arguments.length > 0) {
-        const arg = path.node.arguments[0];
-        console.log(`${typeName} type: ${parentType}`, arg);
+      const fullTypeName = `${parentType}.${typeName}`;
+
+      const isSupport = isSupportApi(fullTypeName);
+      if (isSupport) {
+         const diagnostics  = checkChromeCompatibility(code, fullTypeName);
+         callBack && callBack(diagnostics);
       }
+
+      console.log(`${typeName} type2: ${parentType}`);
+
+      // // 进一步分析，比如检查参数等
+      // if (path.node.arguments.length > 0) {
+      //   const arg = path.node.arguments[0];
+      //   console.log(`${typeName} type1: ${parentType}`, arg);
+      // }
     }
   }
 }
