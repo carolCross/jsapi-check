@@ -5,6 +5,7 @@ import dealNewExpression, { CalleeType } from './ast/newExpression';
 // import dealVariableDeclarator from './ast/variableDeclarator';
 import dealCallExpression from './ast/callExpression';
 
+/** 分析code */
 export function analyzeCode(code: string) {
   const ast = parse(code, {
     sourceType: "module",

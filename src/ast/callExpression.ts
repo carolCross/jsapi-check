@@ -58,24 +58,12 @@ function dealVariableDeclarator(
     const objectNode = callee.object;
     const objectType = objectNode.type;
     let parentType;
-    // 如果是标识符查看该标识符的绑定信息 最重要的内容
-    if (objectType === "Identifier") {
-      const binding = path.scope.getBinding(objectNode.name);
-      if (
-        binding &&
-        binding.path.node.type === "VariableDeclarator" &&
-        binding.path.node.init
-      ) {
-        const initType = binding.path.node.init.type;
-        parentType = getFieldTypeVariableDeclaratorType(initType);
-      } else {
-        parentType = getFieldTypeVariableDeclaratorType(objectNode.type);
-      }
 
-      if (parentType === "unknown") return;
-
+    // 判断具体type {parentType.childType} 如 String.matchAll等
+    function getDiagnosticsByType (type: string) {
+      const parentType = getFieldTypeVariableDeclaratorType(type);
       const fullTypeName = `${parentType}.${typeName}`;
-
+      if (parentType === "unknown") return undefined;
       const isSupport = isSupportApi(fullTypeName);
       if (isSupport) {
         const codePoi = locToCodePoi(callee?.loc);
@@ -83,17 +71,37 @@ function dealVariableDeclarator(
         if (codePoi) {
           diagnostics = checkChromeCompatibility(code, fullTypeName, codePoi);
         }
-        callBack && callBack(diagnostics);
+        return diagnostics;
       }
+      return undefined
+    }
 
-      console.log(`${typeName} type2: ${parentType}`);
+    // 如果是标识符查看该标识符的绑定信息  意思是定义的变量如 arr  obj 等 
+    if (objectType === "Identifier") {
+      // let diagnostics 
+      const binding = path.scope.getBinding(objectNode.name);
+      if (
+        binding &&
+        binding.path.node.type === "VariableDeclarator" &&
+        binding.path.node.init
+      ) {
+        parentType = binding.path.node.init.type;
+      } else {
+        parentType = objectNode.type
+      }
 
       // // 进一步分析，比如检查参数等
       // if (path.node.arguments.length > 0) {
       //   const arg = path.node.arguments[0];
       //   console.log(`${typeName} type1: ${parentType}`, arg);
       // }
+    } else {
+      parentType = objectType;
     }
+
+    const diagnostics = getDiagnosticsByType(parentType);
+    callBack && callBack(diagnostics);
+
   }
 }
 
