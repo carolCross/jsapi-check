@@ -45,8 +45,8 @@ function getFieldTypeVariableDeclaratorType(type: string) {
   return inferredType;
 }
 
-/** 处理所有 分析方法调用表达式 */
-function dealVariableDeclarator(
+/** 处理所有fuc调用表达式 */
+function dealFucDeclarator(
   path: CalleeType,
   code: string,
   callBack: (diagnostics?: Diagnostic) => any | undefined
@@ -105,4 +105,4 @@ function dealVariableDeclarator(
   }
 }
 
-export default dealVariableDeclarator;
+export default dealFucDeclarator;

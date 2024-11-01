@@ -4,6 +4,7 @@ import traverse from "@babel/traverse";
 import dealNewExpression, { CalleeType } from './ast/newExpression';
 // import dealVariableDeclarator from './ast/variableDeclarator';
 import dealCallExpression from './ast/callExpression';
+// import dealFucExpression from './ast/fuctionExpression';
 
 /** 分析code */
 export function analyzeCode(code: string) {
@@ -25,6 +26,8 @@ export function analyzeCode(code: string) {
     NewExpression: (path: CalleeType) => dealNewExpression(path, code, diagnosticsCallBack),
     // 分析方法调用表达式
     CallExpression: (path: CalleeType) => dealCallExpression(path, code, diagnosticsCallBack),
+     // 分析function调用表达式
+    // FunctionExpression: (path: CalleeType) => dealFucExpression(path, code, diagnosticsCallBack),
   });
   
   return diagnosticsList;
