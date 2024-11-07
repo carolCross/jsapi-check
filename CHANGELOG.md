@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.15](https://github.com/guizhichao/jsapi-check/compare/v0.0.14...v0.0.15) (2024-11-07)
+
+
+### Bug Fixes
+
+* logo ([9cb4856](https://github.com/guizhichao/jsapi-check/commit/9cb48562d20288e7aa95c15bb3d5bb614b2abb97))
+
 ### [0.0.14](https://github.com/guizhichao/jsapi-check/compare/v0.0.13...v0.0.14) (2024-11-07)
 
 

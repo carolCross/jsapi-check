@@ -2,7 +2,7 @@
   "name": "jsapi-check",
   "displayName": "jsapi-check",
   "description": "A VSCode plugin to check Chrome compatibility（一款vscode插件用于检测浏览器jsapi的兼容性）",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "publisher": "cross",
   "engines": {
     "vscode": "^1.94.0"
