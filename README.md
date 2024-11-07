@@ -46,9 +46,10 @@ JSAPI-Check 是一个为 Visual Studio Code 开发的插件，它帮助开发者
 
 你可以通过修改 VS Code 设置来调整 JSAPI-Check 的行为：
 
-```json
+```
 "jsapiCheck.enable": true,
 "jsapiCheck.targetBrowsers": ["last 2 versions", "not IE 11"]
+```
 
 
 ## Changelog
