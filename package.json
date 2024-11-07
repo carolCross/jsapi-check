@@ -11,6 +11,7 @@
   "categories": [
     "Other"
   ],
+  "icon": "https://file.40017.cn/groundtrafficstage/Img/logo1.jpg",
   "scripts": {
     "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
@@ -18,7 +19,7 @@
     "pretest": "yarn run compile && yarn run lint",
     "lint": "eslint src",
     "test": "vscode-test",
-    "release": "standard-version"
+    "release": "standard-version && vsce publish"
   },
   "activationEvents": [
     "onLanguage:javascript",
