@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.20](https://github.com/carolCross/jsapi-check/compare/v0.0.19...v0.0.20) (2024-11-07)
+
+
+### Bug Fixes
+
+* vscode types package ([48d040c](https://github.com/carolCross/jsapi-check/commit/48d040c5c99d91106e0a96d886fd796e378a816e))
+
 ### [0.0.19](https://github.com/carolCross/jsapi-check/compare/v0.0.18...v0.0.19) (2024-11-07)
 
 
