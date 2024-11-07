@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.18](https://github.com/carolCross/jsapi-check/compare/v0.0.17...v0.0.18) (2024-11-07)
+
+
+### Features
+
+* 修改git username ([03e2943](https://github.com/carolCross/jsapi-check/commit/03e294311a78fac2c77ef77c76cd1d016fc40b11))
+
 ### [0.0.17](https://github.com/carolCross/jsapi-check/compare/v0.0.16...v0.0.17) (2024-11-07)
 
 
