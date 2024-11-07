@@ -58,4 +58,4 @@ JSAPI-Check 是一个为 Visual Studio Code 开发的插件，它帮助开发者
 
 ## License
 
-[LICENSE](./LICENSE)
+[LICENSE](./LICENSE.txt)
