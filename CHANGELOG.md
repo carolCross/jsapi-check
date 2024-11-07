@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.19](https://github.com/carolCross/jsapi-check/compare/v0.0.18...v0.0.19) (2024-11-07)
+
+
+### Features
+
+* 兼容版本 ([19e89c8](https://github.com/carolCross/jsapi-check/commit/19e89c87d33aa628b63809316526f24e8e00f869))
+* 修改ast表达式 ([355c6c2](https://github.com/carolCross/jsapi-check/commit/355c6c29aa0de682af9bf3e4f07bad5aa9c9236b))
+* readme.md ([2e07942](https://github.com/carolCross/jsapi-check/commit/2e0794295ab013cf40259b98d7de36e9e0627e18))
+
 ### [0.0.18](https://github.com/carolCross/jsapi-check/compare/v0.0.17...v0.0.18) (2024-11-07)
 
 
