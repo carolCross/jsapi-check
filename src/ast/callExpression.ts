@@ -49,9 +49,11 @@ function getFieldTypeVariableDeclaratorType(type: string) {
 function dealVariableDeclarator(
   path: CalleeType,
   code: string,
-  callBack: (diagnostics?: Diagnostic) => any | undefined
+  callBack: (diagnostics?: Diagnostic) => any | undefined,
+  variableTypes: Map<string, string>
 ) {
   const { callee } = path.node;
+  console.log('variableTypes======', variableTypes);
   if (callee.type === "MemberExpression") {
     const typeName = callee.property.name;
     // 检查typeName调用的对象
@@ -78,16 +80,19 @@ function dealVariableDeclarator(
 
     // 如果是标识符查看该标识符的绑定信息  意思是定义的变量如 arr  obj 等 
     if (objectType === "Identifier") {
-      // let diagnostics 
-      const binding = path.scope.getBinding(objectNode.name);
-      if (
-        binding &&
-        binding.path.node.type === "VariableDeclarator" &&
-        binding.path.node.init
-      ) {
-        parentType = binding.path.node.init.type;
+      if (objectNode.name && variableTypes.has(objectNode.name)) {
+        parentType = variableTypes.get(objectNode.name) || objectNode.type;
       } else {
-        parentType = objectNode.type;
+        const binding = path.scope.getBinding(objectNode.name);
+        if (
+          binding &&
+          binding.path.node.type === "VariableDeclarator" &&
+          binding.path.node.init
+        ) {
+          parentType = binding.path.node.init.type;
+        } else {
+          parentType = objectNode.type;
+        }
       }
 
       // // 进一步分析，比如检查参数等
