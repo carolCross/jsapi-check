@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.17](https://github.com/guizhichao/jsapi-check/compare/v0.0.16...v0.0.17) (2024-11-07)
+
+
+### Features
+
+* add LICENSE ([7515fed](https://github.com/guizhichao/jsapi-check/commit/7515fed162688eb9f71e652a117b80cf7eb380e5))
+
 ### [0.0.16](https://github.com/guizhichao/jsapi-check/compare/v0.0.15...v0.0.16) (2024-11-07)
 
 
