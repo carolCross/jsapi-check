@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/guizhichao/jsapi-check/compare/v0.0.10...v0.0.11) (2024-11-07)
+
+
+### Features
+
+* 更新文档 ([7b58a05](https://github.com/guizhichao/jsapi-check/commit/7b58a052555f814597fa51773ddeca364dfd2271))
+
 ### 0.0.10 (2024-11-07)
 
 
@@ -53,4 +60,3 @@ All notable changes to this project will be documented in this file. See [standa
 * add description zh-cn ([398a04a](https://github.com/guizhichao/jsapi-check/commit/398a04a2464f6fb1779b94c22d31bca7ba59edae))
 * ts check ([9e9a362](https://github.com/guizhichao/jsapi-check/commit/9e9a3626cffd90a682c28173ddf7c865ecf9bb71))
 * vsce publish error ------ pnpm change to yarn ([30f4ff5](https://github.com/guizhichao/jsapi-check/commit/30f4ff5b59975eaa1b84640def4e2f014b1326e8))
-
