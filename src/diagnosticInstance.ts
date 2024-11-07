@@ -46,7 +46,7 @@ export default class StatusBar {
     } else {
       code = document.getText();
     }
-    const diagnostics = analyzeCode(code);
+    const diagnostics = analyzeCode(code, document?.uri.path);
     this.diagnosticCollection.set(document.uri, diagnostics);
   };
   /** 处理vue文件 */
