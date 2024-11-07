@@ -54,27 +54,3 @@ All notable changes to this project will be documented in this file. See [standa
 * ts check ([9e9a362](https://github.com/guizhichao/jsapi-check/commit/9e9a3626cffd90a682c28173ddf7c865ecf9bb71))
 * vsce publish error ------ pnpm change to yarn ([30f4ff5](https://github.com/guizhichao/jsapi-check/commit/30f4ff5b59975eaa1b84640def4e2f014b1326e8))
 
-# Change Log
-
-##  A VSCode plugin to check Chrome compatibility
-
-## [released]
-### Added
-
-- v0.0.9 支持变量赋值推断类型
-
-## [released]
-### Added
-
-- v0.0.8 新增表达式中执行api检测 如'12123'.includes() 等
-
-## [released]
-### Added
-
-- v0.0.7 支持jsapi 精确代码检测
-- v0.0.7 core 支持 new APi 与 js 执行版本检测
-
-## [released]
-### Added
-- v0.0.4 支持jsapi代码检测
-- v0.0.4 支持切换chrome 版本
