@@ -25,6 +25,7 @@
     "onLanguage:javascript",
     "onLanguage:typescript"
   ],
+  "browser": "./out/extension.js",
   "main": "./out/extension.js",
   "contributes": {
     "views": {
