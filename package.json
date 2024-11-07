@@ -5,7 +5,7 @@
   "version": "0.0.18",
   "publisher": "cross",
   "engines": {
-    "vscode": "^1.94.0"
+    "vscode": "^1.92.0"
   },
   "pricing": "Free",
   "categories": [
