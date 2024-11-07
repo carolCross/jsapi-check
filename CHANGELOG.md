@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.12](https://github.com/guizhichao/jsapi-check/compare/v0.0.11...v0.0.12) (2024-11-07)
+
+
+### Bug Fixes
+
+* icon logo 位置调整 ([54bd918](https://github.com/guizhichao/jsapi-check/commit/54bd918d28567ef5ff353da6a79bc2c6adbe4de4))
+
 ### [0.0.11](https://github.com/guizhichao/jsapi-check/compare/v0.0.10...v0.0.11) (2024-11-07)
 
 
