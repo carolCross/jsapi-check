@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.16](https://github.com/guizhichao/jsapi-check/compare/v0.0.15...v0.0.16) (2024-11-07)
+
+
+### Features
+
+* add support in browser ([84c3071](https://github.com/guizhichao/jsapi-check/commit/84c30711f0215fdcd5171573ae8c39f66a1c371d))
+
+
+### Bug Fixes
+
+* logo ([54a4efa](https://github.com/guizhichao/jsapi-check/commit/54a4efa7c01d3952df191a12235c947f931a3f81))
+* logo ([4f34d91](https://github.com/guizhichao/jsapi-check/commit/4f34d91ecaf0f12911d84983f800952eb4aa3902))
+* remove unused code ([2637f21](https://github.com/guizhichao/jsapi-check/commit/2637f21f5d22d769533e50a84ffc482e38e71c31))
+
 ### [0.0.15](https://github.com/guizhichao/jsapi-check/compare/v0.0.14...v0.0.15) (2024-11-07)
 
 
