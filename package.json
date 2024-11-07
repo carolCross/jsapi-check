@@ -11,7 +11,7 @@
   "categories": [
     "Other"
   ],
-  "icon": "logo.png",
+  "icon": "extension/logo.png",
   "scripts": {
     "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
