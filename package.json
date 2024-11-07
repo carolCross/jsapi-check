@@ -11,7 +11,7 @@
   "categories": [
     "Other"
   ],
-  "icon": "https://file.40017.cn/groundtrafficstage/Img/logo1.jpg",
+  "icon": "logo.png",
   "scripts": {
     "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
