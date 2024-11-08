@@ -2,6 +2,8 @@ import { Diagnostic } from "vscode";
 import { Expression } from "@babel/types";
 import { isSupportApi, locToCodePoi } from "../utils";
 import { checkChromeCompatibility } from "../compatibilityChecker";
+import astNodeToJsType from "../utils/astNodeToJsType";
+
 
 type CalleeType =
   | {
@@ -53,7 +55,6 @@ function dealVariableDeclarator(
   variableTypes: Map<string, string>
 ) {
   const { callee } = path.node;
-  console.log('variableTypes======', variableTypes);
   if (callee.type === "MemberExpression") {
     const typeName = callee.property.name;
     // 检查typeName调用的对象
@@ -63,7 +64,7 @@ function dealVariableDeclarator(
 
     // 判断具体type {parentType.childType} 如 String.matchAll等
     function getDiagnosticsByType (type: string) {
-      const parentType = getFieldTypeVariableDeclaratorType(type);
+      const parentType = astNodeToJsType(type);
       const fullTypeName = `${parentType}.${typeName}`;
       if (parentType === "unknown") return undefined;
       const isSupport = isSupportApi(fullTypeName);

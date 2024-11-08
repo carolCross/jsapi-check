@@ -105,13 +105,3 @@ import * as t from '@babel/types';
 }
 
 export default handleTypeAnnotation
-
-// // 示例用法
-// const init = {
-//   typeAnnotation: t.tsStringKeyword() // 这里可以替换为其他类型进行测试
-// };
-
-// if (init.typeAnnotation) {
-//   const result = handleTypeAnnotation(init.typeAnnotation);
-//   console.log(result);
-// }
