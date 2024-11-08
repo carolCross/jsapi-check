@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.22](https://github.com/carolCross/jsapi-check/compare/v0.0.21...v0.0.22) (2024-11-08)
+
+
+### Features
+
+* remove unused code, 扩展ast支持类型 ([177d75c](https://github.com/carolCross/jsapi-check/commit/177d75c1a01c53f8394a01590260c9e72ac4642d))
+
 ### [0.0.21](https://github.com/carolCross/jsapi-check/compare/v0.0.20...v0.0.21) (2024-11-08)
 
 
