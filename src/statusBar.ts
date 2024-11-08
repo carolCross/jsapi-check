@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { chromeVersion, setChromeVersion } from './versionControl';
-import { BarText, BarTooltip, BarCommand } from "./config";
+import { BarText, BarTooltip, BarCommand } from "./utils/constant";
 
 /** props */
 type PropsType = {

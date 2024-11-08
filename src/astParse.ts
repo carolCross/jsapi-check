@@ -4,29 +4,24 @@ import traverse from "@babel/traverse";
 import dealNewExpression, { CalleeType } from './ast/newExpression';
 // import dealVariableDeclarator from './ast/variableDeclarator';
 import dealCallExpression from './ast/callExpression';
+import handleTypeAnnotation from './utils/tsTypeToAstNode';
 // import dealFucExpression from './ast/fuctionExpression';
 
-
-
-/** 分析code */
-
 /**
- * 
+ * 分析code
  * @param code  代码
  * @param url 文件地址
  * @returns 
  */
 export function analyzeCode(code: string, url: string) {
   const ast = parse(code, {
-    sourceType: "module",
-    plugins: ["jsx", "typescript"], // Add plugins as needed
+    sourceType: "unambiguous",
+    plugins: ["typescript"], // Add plugins as needed
   });
 
   // 所有变量集合
   const variableTypes = {} as Record<string, Map<string, string>>;
   variableTypes[url] = new Map();
-  console.log('variableTypes=======', variableTypes, url);
-
   const diagnosticsList = [] as Diagnostic[];
   /** 处理回调diagnostic列表 */
   function diagnosticsCallBack (diagnostic?: Diagnostic) {
@@ -34,13 +29,19 @@ export function analyzeCode(code: string, url: string) {
       diagnosticsList.push(diagnostic); 
     }
   }
-
   traverse(ast, {
     /** 变量自定义 */
     VariableDeclarator(path: CalleeType) {
       const { id, init } = path.node;
       if (id.type === "Identifier" && init) {
-        variableTypes[url].set(id.name, init.type);
+        if (init.type === 'TSAsExpression') {
+          const astNode = handleTypeAnnotation(init.typeAnnotation);
+          if (astNode?.type) {
+            variableTypes[url].set(id.name, astNode.type);
+          }
+        } else {
+          variableTypes[url].set(id.name, init.type);
+        }
       }
     },
     /** 赋值表达式 */

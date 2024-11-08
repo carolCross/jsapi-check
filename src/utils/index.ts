@@ -1,4 +1,4 @@
-import { CommonAPIs } from "./config";
+import { CommonAPIs } from "./constant";
 import { SourceLocation } from '@babel/types';
 
 /** 是否支持当前Api */

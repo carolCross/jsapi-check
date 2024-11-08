@@ -1,3 +1,5 @@
+/** 常量列表 */
+
 /** 默认版本 */
 export const DefaultVerison = 90; 
 /** 目前支持检测语言 */
