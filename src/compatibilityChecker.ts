@@ -213,7 +213,7 @@ function checkChromeCompatibility(
   codePoi: CodePoi
 ): Diagnostic {
   const apisToCheck = getAllUseApiList();
-  const api = apisToCheck.find((item) => item.label === typeName);
+  const api = (apisToCheck || []).find((item) => item.label === typeName);
   const diagnostic = showDiagnostics(code, api, codePoi);
   return diagnostic as Diagnostic;
 }

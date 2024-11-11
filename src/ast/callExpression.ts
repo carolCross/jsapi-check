@@ -48,13 +48,14 @@ function getFieldTypeVariableDeclaratorType(type: string) {
 }
 
 /** 处理所有 分析方法调用表达式 */
-function dealVariableDeclarator(
+function dealCallExpression(
   path: CalleeType,
   code: string,
   callBack: (diagnostics?: Diagnostic) => any | undefined,
   variableTypes: Map<string, string>
 ) {
   const { callee } = path.node;
+  console.log('variableTypes======', variableTypes);
   if (callee.type === "MemberExpression") {
     const typeName = callee.property.name;
     // 检查typeName调用的对象
@@ -81,8 +82,9 @@ function dealVariableDeclarator(
 
     // 如果是标识符查看该标识符的绑定信息  意思是定义的变量如 arr  obj 等 
     if (objectType === "Identifier") {
-      if (objectNode.name && variableTypes.has(objectNode.name)) {
-        parentType = variableTypes.get(objectNode.name) || objectNode.type;
+      const keyType = `${objectNode.loc.start.line}${objectNode.name}`;
+      if (objectNode.name && variableTypes.has(keyType)) {
+        parentType = variableTypes.get(keyType) || objectNode.type;
       } else {
         const binding = path.scope.getBinding(objectNode.name);
         if (
@@ -90,7 +92,11 @@ function dealVariableDeclarator(
           binding.path.node.type === "VariableDeclarator" &&
           binding.path.node.init
         ) {
-          parentType = binding.path.node.init.type;
+          const init = binding.path.node.init;
+          if (init.type) {
+            const newKeyType = `${init.loc.start.line}${objectNode.name}`;
+            parentType = variableTypes.get(newKeyType) || init.type;
+          }
         } else {
           parentType = objectNode.type;
         }
@@ -111,4 +117,4 @@ function dealVariableDeclarator(
   }
 }
 
-export default dealVariableDeclarator;
+export default dealCallExpression;
