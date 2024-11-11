@@ -1,52 +1,8 @@
 import { Diagnostic } from "vscode";
-import { Expression } from "@babel/types";
 import { isSupportApi, locToCodePoi } from "../utils";
 import { checkChromeCompatibility } from "../compatibilityChecker";
 import astNodeToJsType from "../utils/astNodeToJsType";
 import handleTypeAnnotation from '../utils/tsTypeToAstNode';
-
-
-type CalleeType =
-  | {
-      node: {
-        callee: {
-          object: {
-            name?: string;
-          };
-          property: {
-            name?: string;
-          };
-        } & Expression;
-      };
-    }
-  | any;
-
-/** 获取字段类型 */
-function getFieldTypeVariableDeclaratorType(type: string) {
-  // 基础类型推断
-  let inferredType;
-  switch (type) {
-    case "NumericLiteral":
-      inferredType = "Number";
-      break;
-    case "StringLiteral":
-      inferredType = "String";
-      break;
-    case "BooleanLiteral":
-      inferredType = "Boolean";
-      break;
-    case "ArrayExpression":
-      inferredType = "Array";
-      break;
-    case "ObjectExpression":
-      inferredType = "Object";
-      break;
-    default:
-      inferredType = "unknown";
-      break;
-  }
-  return inferredType;
-}
 
 /** 处理所有 分析方法调用表达式 */
 function dealCallExpression(

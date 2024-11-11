@@ -1,4 +1,5 @@
 import { Position } from "vscode";
+import { Expression } from '@babel/types';
 
 declare global {
     /** 命令 */
@@ -8,6 +9,20 @@ declare global {
         /** 命令code */
         command: string
     }
+    /** CalleeType */
+    type CalleeType = {
+        node: {
+            callee: {
+                object: {
+                    name?: string
+                },
+                property: {
+                    name?: string
+                }
+            } & Expression
+        }
+    } | any
+    
     
     /**
      * code 位置信息

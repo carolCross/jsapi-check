@@ -1,19 +1,5 @@
-import { Expression } from '@babel/types';
 import { isSupportApi, locToCodePoi } from '../utils';
 import { checkChromeCompatibility } from '../compatibilityChecker';
-
-export type CalleeType = {
-    node: {
-        callee: {
-            object: {
-                name?: string
-            },
-            property: {
-                name?: string
-            }
-        } & Expression
-    }
-} | any
 
 /** 处理所有 new方法调用表达式 */
 function dealNewExpression (path: CalleeType, code: string, callBack: (diagnostics: any) => void) {

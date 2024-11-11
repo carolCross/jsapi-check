@@ -1,19 +1,3 @@
-import { Expression } from '@babel/types';
-import { isSupportApi } from '../utils';
-import { checkChromeCompatibility } from '../compatibilityChecker';
-
-type CalleeType = {
-    node: {
-        callee: {
-            object: {
-                name?: string
-            },
-            property: {
-                name?: string
-            }
-        } & Expression
-    }
-} | any
 
 /** 处理所有 分析变量声明器 */
 function dealVariableDeclarator (path: CalleeType) {

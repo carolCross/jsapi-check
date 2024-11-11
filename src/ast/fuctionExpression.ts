@@ -1,22 +1,6 @@
 import { Diagnostic } from "vscode";
-import { Expression } from "@babel/types";
 import { isSupportApi, locToCodePoi } from "../utils";
 import { checkChromeCompatibility } from "../compatibilityChecker";
-
-type CalleeType =
-  | {
-      node: {
-        callee: {
-          object: {
-            name?: string;
-          };
-          property: {
-            name?: string;
-          };
-        } & Expression;
-      };
-    }
-  | any;
 
 /** 获取字段类型 */
 function getFieldTypeVariableDeclaratorType(type: string) {
