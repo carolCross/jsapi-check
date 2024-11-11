@@ -1,11 +1,11 @@
 import { Diagnostic } from "vscode";
 import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
-import dealNewExpression, { CalleeType } from './ast/newExpression';
+import dealNewExpression from './ast/newExpression';
 // import dealVariableDeclarator from './ast/variableDeclarator';
 import dealCallExpression from './ast/callExpression';
 import handleTypeAnnotation from './utils/tsTypeToAstNode';
-import dealFucExpression from './ast/fuctionExpression';
+// import dealFucExpression from './ast/fuctionExpression';
 
 /**
  * 分析code
