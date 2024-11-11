@@ -6,3 +6,5 @@ export * from './tsTypeToAstNode';
 export * from './astNodeToJsType';
 /** common fuc */
 export * from './common';
+/** common fuc */
+export * from './compatibilityChecker';

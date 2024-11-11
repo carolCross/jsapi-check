@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { DiagnosticCommand, supportLanguageList } from "@/utils";
-import {analyzeCode} from './astParse';
+import { analyzeCode } from '@/ast';
 
 /** props */
 type PropsType = {
@@ -8,7 +8,7 @@ type PropsType = {
   context: vscode.ExtensionContext;
 };
 /* 底部状态栏 */
-export default class StatusBar {
+export default class DiagnosticInstance {
   props = {} as PropsType;
   diagnosticCollection = {} as vscode.DiagnosticCollection;
   constructor(pr: PropsType) {

@@ -2,8 +2,8 @@ import { Diagnostic } from "vscode";
 import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import { handleTypeAnnotation } from '@/utils';
-import dealNewExpression from './ast/newExpression';
-import dealCallExpression from './ast/callExpression';
+import dealNewExpression from './newExpression';
+import dealCallExpression from './callExpression';
 // import dealVariableDeclarator from './ast/variableDeclarator';
 // import dealFucExpression from './ast/fuctionExpression';
 

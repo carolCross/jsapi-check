@@ -1,5 +1,4 @@
-import { isSupportApi, locToCodePoi } from '@/utils';
-import { checkChromeCompatibility } from '../compatibilityChecker';
+import { isSupportApi, locToCodePoi, checkChromeCompatibility } from '@/utils';
 
 /** 处理所有 new方法调用表达式 */
 function dealNewExpression (path: CalleeType, code: string, callBack: (diagnostics: any) => void) {

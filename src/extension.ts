@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
-import StatusBar from "./statusBar";
-import DiagnosticInstance from "./diagnosticInstance";
-import { registerCommand } from "./commandRegister";
+import { statusBar, DiagnosticInstance, registerCommand } from '@/plugins';
+
 /** 激活启动 */
 export function activate(context: vscode.ExtensionContext) {
   /** 报错初始化事例 */
@@ -10,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   /** 初始化statusBar */
-  const statusBarInstance = new StatusBar({
+  const statusBarInstance = new statusBar({
     context,
     updateDiagnostics: diagnosticInstanceInstance.updateDiagnostics,
   });

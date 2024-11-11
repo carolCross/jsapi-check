@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 const packageJson = require("../package.json");
 
 /** 注册通用命令 */
-export const registerCommand = (
+const registerCommand = (
   context: vscode.ExtensionContext,
   callback: (document: vscode.TextDocument) => void
 ) => {
@@ -27,3 +27,5 @@ const checkCommandValiate = (command: string): string => {
   );
   return commandObj?.command;
 };
+
+export default registerCommand;

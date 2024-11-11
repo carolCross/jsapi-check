@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { chromeVersion, setChromeVersion } from './versionControl';
+import { chromeVersion, setChromeVersion } from '@/plugins';
 import { BarText, BarTooltip, BarCommand } from "@/utils";
 
 /** props */
@@ -10,7 +10,7 @@ type PropsType = {
   updateDiagnostics: (document: vscode.TextDocument) => void;
 };
 /* 底部状态栏 */
-export default class StatusBar {
+export default class statusBarInstance {
   props = {} as PropsType;
   statusBarItem = {} as vscode.StatusBarItem;
   constructor(pr: PropsType) {
