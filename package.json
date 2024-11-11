@@ -19,7 +19,8 @@
     "pretest": "yarn run compile && yarn run lint",
     "lint": "eslint src",
     "test": "vscode-test",
-    "release": "standard-version && vsce publish"
+    "update": "standard-version",
+    "publish": "standard-version && vsce publish"
   },
   "activationEvents": [
     "onLanguage:javascript",
