@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.24](https://github.com/carolCross/jsapi-check/compare/v0.0.23...v0.0.24) (2024-11-11)
+
+
+### Features
+
+* 支持function 中属性变量ts作用域检测 ([8360466](https://github.com/carolCross/jsapi-check/commit/83604662316ad148f5a774f7bfe90ef3728f63d4))
+
 ### [0.0.23](https://github.com/carolCross/jsapi-check/compare/v0.0.22...v0.0.23) (2024-11-11)
 
 
