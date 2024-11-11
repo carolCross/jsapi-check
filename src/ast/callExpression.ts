@@ -3,6 +3,7 @@ import { Expression } from "@babel/types";
 import { isSupportApi, locToCodePoi } from "../utils";
 import { checkChromeCompatibility } from "../compatibilityChecker";
 import astNodeToJsType from "../utils/astNodeToJsType";
+import handleTypeAnnotation from '../utils/tsTypeToAstNode';
 
 
 type CalleeType =
@@ -88,15 +89,49 @@ function dealCallExpression(
       } else {
         const binding = path.scope.getBinding(objectNode.name);
         if (
-          binding &&
-          binding.path.node.type === "VariableDeclarator" &&
-          binding.path.node.init
+          binding
         ) {
-          const init = binding.path.node.init;
-          if (init.type) {
-            const newKeyType = `${init.loc.start.line}${objectNode.name}`;
-            parentType = variableTypes.get(newKeyType) || init.type;
+          // 如果是变量声明器
+          switch (binding.path.node.type) {
+            // 变量类型
+            case "VariableDeclarator":
+              const init = binding.path.node.init;
+              if (init.type) {
+                const newKeyType = `${init.loc.start.line}${objectNode.name}`;
+                parentType = variableTypes.get(newKeyType) || init.type;
+              }
+              break;
+            // 赋值表达式
+            case "Identifier":
+              const node = binding.path.node;
+              if (node.type === 'Identifier' && node.typeAnnotation) {
+                const data =  node.typeAnnotation?.typeAnnotation;
+                const astNode = handleTypeAnnotation(data);
+                // 如果ts类型为any，则根据表达式进行类型推断
+                if (astNode?.name === 'any') {
+                  const expressionType = init.expression.type;
+                  parentType = expressionType
+                  // const type = 
+                  // variableTypes[url].set(keyType, expression);
+                } else if(astNode?.type) {
+                  parentType = astNode.type
+                  // variableTypes[url].set(keyType, astNode.type);
+                }
+              }
+              break;
+          
+            default:
+              break;
           }
+
+          // if (binding.path.node.type === "VariableDeclarator" &&
+          //   binding.path.node.init) {
+          //     const init = binding.path.node.init;
+          //     if (init.type) {
+          //       const newKeyType = `${init.loc.start.line}${objectNode.name}`;
+          //       parentType = variableTypes.get(newKeyType) || init.type;
+          //     }
+          //   } else if ()
         } else {
           parentType = objectNode.type;
         }
@@ -118,3 +153,4 @@ function dealCallExpression(
 }
 
 export default dealCallExpression;
+

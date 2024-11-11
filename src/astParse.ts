@@ -56,23 +56,29 @@ export function analyzeCode(code: string, url: string) {
         const binding = path.scope.getBinding(left.name);
         const bindNode = binding.path.node;
         const init = binding.path.node.init;
+        // 赋值是优先查询变量作用于域中绑定类型字段
         if (binding && bindNode.type === "VariableDeclarator" && bindNode.init) { 
           const newKeyType = `${init.loc.start.line}${bindNode.id.name}`;
           variableTypes[url].set(newKeyType, right.type);
         }
-        // const keyType = `${left.loc.start.line}${left.name}`;
-        // parentType = variableTypes.get(newKeyType) || init.type;
-          // if (binding.path.node.type === "VariableDeclarator" &&) {
-          // const keyType = `${left.loc.start.line}${left.name}`;
-          // variableTypes[url].set(keyType, right.type);
-        // }
+      } else if (left.type === "MemberExpression") {
+        const objectName = left.object.name;
+        const propertyName = left.property.name;
+        const binding = path.scope.getBinding(objectName);
+        if (binding) {
+          const keyType = `${binding.path.node.loc.start.line}${objectName}.${propertyName}`;
+          variableTypes[url].set(keyType, right.type);
+        }
       }
     },
     // 处理所有new方法调用表达式
     NewExpression: (path: CalleeType) => dealNewExpression(path, code, diagnosticsCallBack),
     // 分析方法调用表达式
     CallExpression: (path: CalleeType) => dealCallExpression(path, code, diagnosticsCallBack, variableTypes[url]),
-     // 分析function调用表达式
+    // 分析function调用表达式
+    // FunctionExpression(path) {
+    //   console.log('Found a FunctionExpression:', path.node);
+    // },
     // FunctionExpression: (path: CalleeType) => dealFucExpression(path, code, diagnosticsCallBack),
   });
   
