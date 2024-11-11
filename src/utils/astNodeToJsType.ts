@@ -3,7 +3,7 @@
  * @param astNodeToJsType 实现将NumericLiteral, StringLiteral, BooleanLiteral, ArrayExpression, ObjectExpression等类型 转换成 String Object Number等类型
  * @returns t.Node
  */
-function astNodeToJsType(type: string): string {
+export function astNodeToJsType(type: string): string {
   switch (type) {
       case 'StringLiteral':
           return 'String';
@@ -62,5 +62,3 @@ function astNodeToJsType(type: string): string {
           return 'unknown';
   }
 }
-
-export default astNodeToJsType

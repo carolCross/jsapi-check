@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { DiagnosticCommand, supportLanguageList } from "./utils/constant";
+import { DiagnosticCommand, supportLanguageList } from "@/utils";
 import {analyzeCode} from './astParse';
 
 /** props */

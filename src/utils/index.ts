@@ -1,6 +1,10 @@
 import { CommonAPIs } from "./constant";
 import { SourceLocation } from '@babel/types';
 
+export * from './constant';
+export * from './tsTypeToAstNode';
+export * from './astNodeToJsType';
+
 /** 是否支持当前Api */
 export const isSupportApi = (fieldType: string): boolean => {
   if (!fieldType) {

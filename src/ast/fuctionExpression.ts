@@ -1,5 +1,5 @@
 import { Diagnostic } from "vscode";
-import { isSupportApi, locToCodePoi } from "../utils";
+import { isSupportApi, locToCodePoi } from "@/utils";
 import { checkChromeCompatibility } from "../compatibilityChecker";
 
 /** 获取字段类型 */

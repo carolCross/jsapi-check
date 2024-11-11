@@ -1,4 +1,4 @@
-import { isSupportApi, locToCodePoi } from '../utils';
+import { isSupportApi, locToCodePoi } from '@/utils';
 import { checkChromeCompatibility } from '../compatibilityChecker';
 
 /** 处理所有 new方法调用表达式 */

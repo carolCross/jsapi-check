@@ -5,7 +5,7 @@ import * as t from '@babel/types';
  * @param typeAnnotation 实现将@babel/types typeAnnotation.type 类型转换成 NumericLiteral, StringLiteral, BooleanLiteral, ArrayExpression, ObjectExpression等类型
  * @returns t.Node
  */
- function handleTypeAnnotation(typeAnnotation: t.TSType): t.Node | any {
+export function handleTypeAnnotation(typeAnnotation: t.TSType): t.Node | any {
   switch (typeAnnotation.type) {
     case 'TSStringKeyword':
       console.log('Type is string');
@@ -103,5 +103,3 @@ import * as t from '@babel/types';
       return t.identifier('unsupported');
   }
 }
-
-export default handleTypeAnnotation

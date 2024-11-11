@@ -1,8 +1,6 @@
 import { Diagnostic } from "vscode";
-import { isSupportApi, locToCodePoi } from "../utils";
+import {  isSupportApi, locToCodePoi, astNodeToJsType, handleTypeAnnotation } from '@/utils';
 import { checkChromeCompatibility } from "../compatibilityChecker";
-import astNodeToJsType from "../utils/astNodeToJsType";
-import handleTypeAnnotation from '../utils/tsTypeToAstNode';
 
 /** 处理所有 分析方法调用表达式 */
 function dealCallExpression(

@@ -1,4 +1,4 @@
-import { DefaultVerison } from "./utils/constant";
+import { DefaultVerison } from "@/utils";
 
 export let chromeVersion = DefaultVerison;
 
