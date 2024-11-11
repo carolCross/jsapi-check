@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.28](https://github.com/carolCross/jsapi-check/compare/v0.0.24...v0.0.28) (2024-11-11)
+
+
+### Features
+
+* add scripts update/publish ([6324f37](https://github.com/carolCross/jsapi-check/commit/6324f3719e0ab786ed2fb9a17af46f4e58a94f5b))
+* ts type extract, remove unused code ([93037e7](https://github.com/carolCross/jsapi-check/commit/93037e743737c804d52c91516d5cc9ab69c040bb))
+
+
+### Bug Fixes
+
+* remove unused code ([06df1c9](https://github.com/carolCross/jsapi-check/commit/06df1c92c9c6fb8706ca573a8dfb2f0453096957))
+
 ### [0.0.24](https://github.com/carolCross/jsapi-check/compare/v0.0.23...v0.0.24) (2024-11-11)
 
 
