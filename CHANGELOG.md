@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.23](https://github.com/carolCross/jsapi-check/compare/v0.0.22...v0.0.23) (2024-11-11)
+
+
+### Features
+
+* 支持ts 类型any 细分推断检测，支持区分作用域变量检测 ([30405c4](https://github.com/carolCross/jsapi-check/commit/30405c4844abeabddaf279209483e25d92dd1e72))
+
 ### [0.0.22](https://github.com/carolCross/jsapi-check/compare/v0.0.21...v0.0.22) (2024-11-08)
 
 
