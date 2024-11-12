@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.33](https://github.com/carolCross/jsapi-check/compare/v0.0.32...v0.0.33) (2024-11-12)
+
+
+### Features
+
+* add Chrome default verison 0 ([ff36b46](https://github.com/carolCross/jsapi-check/commit/ff36b466cd9cefa094b7316a4bbf693d028e15fb))
+* add Star History ([0b657dd](https://github.com/carolCross/jsapi-check/commit/0b657dd46978943261093ec1dee1e1d231488f7a))
+
 ### [0.0.32](https://github.com/carolCross/jsapi-check/compare/v0.0.31...v0.0.32) (2024-11-12)
 
 ### [0.0.31](https://github.com/carolCross/jsapi-check/compare/v0.0.30...v0.0.31) (2024-11-12)
