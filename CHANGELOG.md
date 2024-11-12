@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.29](https://github.com/carolCross/jsapi-check/compare/v0.0.28...v0.0.29) (2024-11-12)
+
+
+### Features
+
+* support vue api check ([90d5501](https://github.com/carolCross/jsapi-check/commit/90d550128e39003c6c527f31005bc0bd1701f7a7))
+
 ### [0.0.28](https://github.com/carolCross/jsapi-check/compare/v0.0.24...v0.0.28) (2024-11-11)
 
 

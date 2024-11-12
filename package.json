@@ -2,7 +2,7 @@
   "name": "jsapi-check",
   "displayName": "jsapi-check",
   "description": "A VSCode plugin to check Chrome compatibility（一款vscode插件用于检测浏览器jsapi的兼容性）support MDN document",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "publisher": "cross",
   "engines": {
     "vscode": "^1.72.0"
@@ -25,7 +25,7 @@
   "activationEvents": [
     "onLanguage:javascript",
     "onLanguage:typescript",
-     "onLanguage:vue"
+    "onLanguage:vue"
   ],
   "browser": "./out/extension.js",
   "main": "./out/extension.js",
@@ -71,8 +71,15 @@
       },
       {
         "id": "vue",
-        "extensions": [".vue", ".VUE"],
-        "aliases": ["vue", "vue", "Vue"]
+        "extensions": [
+          ".vue",
+          ".VUE"
+        ],
+        "aliases": [
+          "vue",
+          "vue",
+          "Vue"
+        ]
       }
     ]
   },
