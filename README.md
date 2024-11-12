@@ -52,3 +52,13 @@ jsapi-check 是一个为 Visual Studio Code 开发的插件，它帮助开发者
 
 ## github
 [github地址](https://github.com/carolCross/jsapi-check)
+
+## Star History
+<a href="https://star-history.com/#AmruthPillai/Reactive-Resume&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://star-history.com/#star-history/star-history&Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://star-history.com/#star-history/star-history&Date" />
+    <img alt="Star History Chart" src="https://star-history.com/#star-history/star-history&Date" />
+  </picture>
+</a>
+
