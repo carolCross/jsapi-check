@@ -1,6 +1,6 @@
-# JSAPI-Check for VS Code
+# jsapi-check for VS Code
 
-JSAPI-Check 是一个为 Visual Studio Code 开发的插件，它帮助开发者识别并解决 JavaScript 代码中可能存在的浏览器兼容性问题。
+jsapi-check 是一个为 Visual Studio Code 开发的插件，它帮助开发者识别并解决 JavaScript 代码中可能存在的浏览器兼容性问题。
 
 ## 功能
 
@@ -23,38 +23,16 @@ JSAPI-Check 是一个为 Visual Studio Code 开发的插件，它帮助开发者
 
 ## 安装
 
-你可以通过以下方式安装 JSAPI-Check 插件：
+你可以通过以下方式安装 jsapi-check 插件：
 
 ### 通过 Visual Studio Code Marketplace
 
+[Marketplace——jsapi-check地址](https://marketplace.visualstudio.com/items?itemName=cross.jsapi-check)
+
 1. 打开 VS Code。
 2. 转到 Extensions 视图（视图 -> 扩展或使用 `Ctrl+Shift+X` 快捷键）。
-3. 在搜索框中输入 "JSAPI-Check"。
-4. 找到 JSAPI-Check 插件，点击安装。
-
-### 通过 VSIX 文件
-
-如果你有 JSAPI-Check 的 `.vsix` 文件：
-1. 打开 VS Code。
-2. 转到 Extensions 视图。
-3. 点击 `...` 更多操作菜单，选择 "Install from VSIX..."。
-4. 选择你的 `.vsix` 文件并安装。
-
-## 使用方法
-
-安装插件后，JSAPI-Check 将自动在你打开的 JavaScript 文件中运行。如果发现任何兼容性问题，它们将显示在“问题”面板中。
-
-你可以点击问题描述旁边的链接，查看更多关于不兼容 API 的详细信息和可能的解决方案。
-
-
-## 设置
-
-你可以通过修改 VS Code 设置来调整 JSAPI-Check 的行为：
-
-```
-"jsapiCheck.enable": true,
-"jsapiCheck.targetBrowsers": ["last 2 versions", "not IE 11"]
-```
+3. 在搜索框中输入 "jsapi-check"。
+4. 找到 jsapi-check 插件，点击安装。
 
 
 ## Changelog
@@ -64,3 +42,6 @@ JSAPI-Check 是一个为 Visual Studio Code 开发的插件，它帮助开发者
 ## License
 
 [LICENSE](./LICENSE.txt)
+
+## github
+[github地址](https://github.com/carolCross/jsapi-check)
