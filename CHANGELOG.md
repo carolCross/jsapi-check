@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.30](https://github.com/carolCross/jsapi-check/compare/v0.0.29...v0.0.30) (2024-11-12)
+
+
+### Features
+
+* support mjs, cjs ([00570c2](https://github.com/carolCross/jsapi-check/commit/00570c2ff1ea73ee3c55c9a44d4e05c1c0d01c83))
+
 ### [0.0.29](https://github.com/carolCross/jsapi-check/compare/v0.0.28...v0.0.29) (2024-11-12)
 
 
