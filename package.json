@@ -24,7 +24,8 @@
   },
   "activationEvents": [
     "onLanguage:javascript",
-    "onLanguage:typescript"
+    "onLanguage:typescript",
+     "onLanguage:vue"
   ],
   "browser": "./out/extension.js",
   "main": "./out/extension.js",
@@ -67,6 +68,11 @@
           "tsx",
           "TS"
         ]
+      },
+      {
+        "id": "vue",
+        "extensions": [".vue", ".VUE"],
+        "aliases": ["vue", "vue", "Vue"]
       }
     ]
   },

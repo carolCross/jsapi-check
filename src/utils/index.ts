@@ -10,19 +10,20 @@ export const isSupportApi = (fieldType: string): boolean => {
   return CommonAPIs.includes(firstApi);
 };
 
-/** loc 生成code poi */
-export const locToCodePoi = (loc: SourceLocation): CodePoi | null => {
+/** loc 生成code poi startLine 为起始行数 */
+export const locToCodePoi = (loc: SourceLocation, startLine?: number): CodePoi | null => {
+  console.log('startLine======', startLine);
   if (!loc) return null
   const start = loc.start;
   const end = loc.end;
   return {
     start: {
-      x: start.line,
+      x: start.line + (startLine || 0),
       y: start.column,
-  },
-  end: {
-      x: end.line,
-      y: end.column,
-  }
+    },
+    end: {
+        x: end.line + (startLine || 0),
+        y: end.column,
+    }
   }
 }

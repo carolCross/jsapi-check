@@ -1,5 +1,5 @@
 import { Diagnostic } from "vscode";
-import { isSupportApi, locToCodePoi } from "../utils";
+import { isSupportApi, locToCodePoi } from "../utils/index";
 import { checkChromeCompatibility } from "../compatibilityChecker";
 import astNodeToJsType from "../utils/astNodeToJsType";
 import handleTypeAnnotation from '../utils/tsTypeToAstNode';
@@ -9,7 +9,9 @@ function dealCallExpression(
   path: CalleeType,
   code: string,
   callBack: (diagnostics?: Diagnostic) => any | undefined,
-  variableTypes: Map<string, string>
+  variableTypes: Map<string, string>,
+  /** 起始行数 */
+  startLine?: number
 ) {
   const { callee } = path.node;
   console.log('variableTypes======', variableTypes);
@@ -20,22 +22,6 @@ function dealCallExpression(
     const objectType = objectNode.type;
     let parentType;
 
-    // 判断具体type {parentType.childType} 如 String.matchAll等
-    function getDiagnosticsByType (type: string) {
-      const parentType = astNodeToJsType(type);
-      const fullTypeName = `${parentType}.${typeName}`;
-      if (parentType === "unknown") return undefined;
-      const isSupport = isSupportApi(fullTypeName);
-      if (isSupport) {
-        const codePoi = locToCodePoi(callee?.loc);
-        let diagnostics;
-        if (codePoi) {
-          diagnostics = checkChromeCompatibility(code, fullTypeName, codePoi);
-        }
-        return diagnostics;
-      }
-      return undefined
-    }
 
     // 如果是标识符查看该标识符的绑定信息  意思是定义的变量如 arr  obj 等 
     if (objectType === "Identifier") {
@@ -102,11 +88,28 @@ function dealCallExpression(
       parentType = objectType;
     }
 
-    const diagnostics = getDiagnosticsByType(parentType);
+    const diagnostics = getDiagnosticsByType(code, callee, typeName, parentType, startLine);
     callBack && callBack(diagnostics);
 
   }
 }
+
+  // 判断具体type {parentType.childType} 如 String.matchAll等
+  function getDiagnosticsByType (code: string, callee: any, typeName: string, type: string, startLine?: number) {
+    const parentType = astNodeToJsType(type);
+    const fullTypeName = `${parentType}.${typeName}`;
+    if (parentType === "unknown") return undefined;
+    const isSupport = isSupportApi(fullTypeName);
+    if (isSupport) {
+      const codePoi = locToCodePoi(callee?.loc, startLine);
+      let diagnostics;
+      if (codePoi) {
+        diagnostics = checkChromeCompatibility(code, fullTypeName, codePoi);
+      }
+      return diagnostics;
+    }
+    return undefined
+  }
 
 export default dealCallExpression;
 

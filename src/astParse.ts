@@ -11,9 +11,10 @@ import handleTypeAnnotation from './utils/tsTypeToAstNode';
  * 分析code
  * @param code  代码
  * @param url 文件地址
+ * @param startLine 起始点行数
  * @returns 
  */
-export function analyzeCode(code: string, url: string) {
+export function analyzeCode(code: string, url: string, startLine?: number) {
   const ast = parse(code, {
     sourceType: "unambiguous",
     plugins: ["typescript"], // Add plugins as needed
@@ -74,7 +75,7 @@ export function analyzeCode(code: string, url: string) {
     // 处理所有new方法调用表达式
     NewExpression: (path: CalleeType) => dealNewExpression(path, code, diagnosticsCallBack),
     // 分析方法调用表达式
-    CallExpression: (path: CalleeType) => dealCallExpression(path, code, diagnosticsCallBack, variableTypes[url]),
+    CallExpression: (path: CalleeType) => dealCallExpression(path, code, diagnosticsCallBack, variableTypes[url], startLine),
     // 分析function调用表达式
     // FunctionExpression(path) {
     //   console.log('Found a FunctionExpression:', path.node);
