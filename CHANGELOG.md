@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.34](https://github.com/carolCross/jsapi-check/compare/v0.0.33...v0.0.34) (2024-11-13)
+
+
+### Features
+
+* node_moudles 里的包以及超过10000行代码不做检测，防止卡死 ([6bd56a4](https://github.com/carolCross/jsapi-check/commit/6bd56a431a539d665e0cda64cbe0ce921e9e9802))
+
 ### [0.0.33](https://github.com/carolCross/jsapi-check/compare/v0.0.32...v0.0.33) (2024-11-12)
 
 
