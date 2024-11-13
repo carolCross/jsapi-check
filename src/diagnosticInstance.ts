@@ -33,6 +33,16 @@ export default class StatusBar {
   updateDiagnostics = (document: vscode.TextDocument) => {
     const languageId = document.languageId;
 
+    // 检查文件路径是否包含 node_modules
+    if (document.uri.path.includes('node_modules')) {
+      return;
+    }
+    // 检查文件行数是否超过 10000 行
+    const lineCount = document.lineCount;
+    if (lineCount > 10000) {
+      return;
+    }
+
     if (!supportLanguageList.includes(languageId)) {
       return;
     }
