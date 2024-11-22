@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.36](https://github.com/carolCross/jsapi-check/compare/v0.0.35...v0.0.36) (2024-11-22)
+
+
+### Features
+
+* 仓库调整 ([854fd0d](https://github.com/carolCross/jsapi-check/commit/854fd0d5dedebab04a8771816cdded82feea6619))
+* 仓库调整 ([286413b](https://github.com/carolCross/jsapi-check/commit/286413b0cdbd9cecc4f53f53e5d9e03df313d1f8))
+
 ### [0.0.35](https://github.com/carolCross/jsapi-check/compare/v0.0.34...v0.0.35) (2024-11-22)
 
 ### [0.0.34](https://github.com/carolCross/jsapi-check/compare/v0.0.33...v0.0.34) (2024-11-13)
