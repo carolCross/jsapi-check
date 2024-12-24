@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.38](https://github.com/carolCross/jsapi-check/compare/v0.0.37...v0.0.38) (2024-12-24)
+
+
+### Features
+
+* 支持开发者模式 ([64503a1](https://github.com/carolCross/jsapi-check/commit/64503a1e775f6d0cb4fccaea1a169ce93a883d9e))
+* readme.md调整 ([7c777ec](https://github.com/carolCross/jsapi-check/commit/7c777ec6cd903da8324a1718e0695cac782d7331))
+
 ### [0.0.37](https://github.com/carolCross/jsapi-check/compare/v0.0.36...v0.0.37) (2024-12-24)
 
 
