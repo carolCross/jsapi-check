@@ -85,13 +85,17 @@
           "Vue"
         ]
       }
-    ]
+    ],
+    "commands": []
   },
   "dependencies": {
     "@babel/parser": "^7.25.9",
     "@babel/traverse": "^7.25.9",
     "@babel/types": "^7.25.9",
     "@mdn/browser-compat-data": "5.6.7"
+  },
+  "bugs": {
+    "url": "https://github.com/carolCross/jsapi-check/issues"
   },
   "repository": {
     "type": "git",
