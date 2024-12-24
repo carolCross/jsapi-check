@@ -17,7 +17,7 @@ jsapi-check 是一个为 Visual Studio Code 开发的插件，它帮助开发者
 
 ## 特殊说明：
 
-**为了快速看到js 兼容性效果 Chrome 版本默认为0, 可右下角自行切换**
+**为了快速看到js 兼容性效果 Chrome 版本默认为72(alipayHk), 可右下角自行切换**
 
 ## 界面
 
@@ -26,6 +26,11 @@ jsapi-check 是一个为 Visual Studio Code 开发的插件，它帮助开发者
 ![alt text](image.png)
 
 ![alt text](image-2.png)
+
+## 开发模式
+![alt text](image-3.png)
+
+![alt text](image-4.png)
 
 ## 安装方式
 
