@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.39](https://github.com/carolCross/jsapi-check/compare/v0.0.38...v0.0.39) (2024-12-24)
+
+
+### Features
+
+* 修复chrome版本更换 ([3f927f2](https://github.com/carolCross/jsapi-check/commit/3f927f2c6c81dcda2b9b50fc33d647f5151ca121))
+
 ### [0.0.38](https://github.com/carolCross/jsapi-check/compare/v0.0.37...v0.0.38) (2024-12-24)
 
 
