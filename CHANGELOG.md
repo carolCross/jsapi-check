@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.37](https://github.com/carolCross/jsapi-check/compare/v0.0.36...v0.0.37) (2024-12-24)
+
+
+### Features
+
+* 支持模式选择-alipayHK/wechat 开发模式 ([aa1507d](https://github.com/carolCross/jsapi-check/commit/aa1507d06ac30f271ca25ed9853ec4fab469fbc8))
+* update package commands ([9f43f98](https://github.com/carolCross/jsapi-check/commit/9f43f98a4784f3ba74b40cb9c5e0234d7ae3dce2))
+
 ### [0.0.36](https://github.com/carolCross/jsapi-check/compare/v0.0.35...v0.0.36) (2024-11-22)
 
 
