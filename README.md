@@ -7,6 +7,7 @@ jsapi-check 是一个为 Visual Studio Code 开发的插件，它帮助开发者
 - **浏览器兼容性检查**：自动分析你的 JavaScript 代码，标识出可能不被所有目标浏览器支持的 API。
 - **支持不同chrome浏览器切换**：在 VS Code 问题窗口中直接显示不兼容的 API 以及相关的 MDN 文档链接。
 - **详细问题报告**：在 VS Code 问题窗口中直接显示不兼容的 API 以及相关的 MDN 文档链接。
+- **支持不同开发者模式alipayHk/wechat**：支持两种开发者模式
 
 ## 支持文件格式
 - **js**：支持.js、.jsx、.mjs、.cjs 文件格式检测
