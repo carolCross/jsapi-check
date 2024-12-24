@@ -84,12 +84,12 @@ export default class StatusBar {
           placeHolder: '请选择一个开发模式'
         });
         if (selectedMode) {
-          setChromeVersion(ModeChromeVersionMap[this.currentMode]);
           this.currentMode = selectedMode as keyof typeof ModeChromeVersionMap;
+          setChromeVersion(ModeChromeVersionMap[this.currentMode]);
           this.modeStatusBar.text = `${ModeStatusBarText}${this.currentMode}`;
-          console.log('selectedMode=====', selectedMode, ModeChromeVersionMap[this.currentMode])
           this.inputStatusBar.text = `Chrome Version: ${ModeChromeVersionMap[this.currentMode]}`;
           vscode.window.showInformationMessage(`已切换到 ${selectedMode} 模式`);
+          this.setUpdateDiagnostics();
         }
       }
     );
