@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { chromeVersion, setChromeVersion } from './versionControl';
-import { InputStatusBarText, InputStatusTooltip, InputStatusCommand, ModeStatusBarText, ModeStatusCommand, ModeStatusTooltip, ModeChromeVersionMap } from "./utils/constant";
+import { chromeVersion, setChromeVersion } from '../core/versionControl';
+import { InputStatusBarText, InputStatusTooltip, InputStatusCommand, ModeStatusBarText, ModeStatusCommand, ModeStatusTooltip, ModeChromeVersionMap } from "../utils/constant";
 
 /** props */
 type PropsType = {

@@ -11,24 +11,26 @@
   "categories": [
     "Other"
   ],
-  "icon": "logo.png",
+  "icon": "assets/logo.png",
   "scripts": {
-    "vscode:prepublish": "yarn run compile",
+    "vscode:prepublish": "yarn run build --production",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "yarn run compile && yarn run lint",
+    "watch": "node esbuild.js --watch",
+    "build": "node esbuild.js",
+    "pretest": "yarn run build && yarn run lint",
     "lint": "eslint src",
     "test": "vscode-test",
     "update": "standard-version",
-    "publish": "standard-version && vsce publish"
+    "publish": "standard-version && vsce publish",
+    "package": "vsce package"
   },
   "activationEvents": [
     "onLanguage:javascript",
     "onLanguage:typescript",
     "onLanguage:vue"
   ],
-  "browser": "./out/extension.js",
-  "main": "./out/extension.js",
+  "browser": "./dist/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "views": {
       "explorer": [
@@ -86,7 +88,12 @@
         ]
       }
     ],
-    "commands": []
+    "commands": [
+      {
+        "command": "jsapi-check.checkCompatibility",
+        "title": "checkCompatibility"
+      }
+    ]
   },
   "dependencies": {
     "@babel/parser": "^7.25.9",
@@ -110,8 +117,10 @@
     "@typescript-eslint/parser": "^8.7.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1",
+    "esbuild": "^0.25.9",
     "eslint": "^9.11.1",
     "standard-version": "^9.5.0",
     "typescript": "^5.6.2"
-  }
+  },
+  "packageManager": "yarn@4.9.3+sha512.8295ee814f6b253e16f516416481b481a215ed03ef1ae38524d108084872560a9ed75aeb23b91ab64222062ac4149a594150ae538c2a9536fdbcefd4e49b11cc"
 }

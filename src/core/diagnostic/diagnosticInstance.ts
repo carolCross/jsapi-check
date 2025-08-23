@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import { DiagnosticCommand, supportLanguageList } from "./utils/constant";
-import {analyzeCode} from './astParse';
+import { DiagnosticCommand, supportLanguageList } from "../../utils/constant";
+import {analyzeCode} from '../astParse';
 
 /** props */
 type PropsType = {

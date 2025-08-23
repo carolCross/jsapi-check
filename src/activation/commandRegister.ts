@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-const packageJson = require("../package.json");
+const packageJson = require("../../package.json");
 
 /** 注册通用命令 */
 export const registerCommand = (

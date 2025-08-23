@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import StatusBar from "./statusBar";
-import DiagnosticInstance from "./diagnosticInstance";
+import DiagnosticInstance from "../core/diagnostic/diagnosticInstance";
 import { registerCommand } from "./commandRegister";
 /** 激活启动 */
 export function activate(context: vscode.ExtensionContext) {

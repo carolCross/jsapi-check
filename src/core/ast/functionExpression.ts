@@ -1,6 +1,6 @@
 import { Diagnostic } from "vscode";
-import { isSupportApi, locToCodePoi } from "../utils/index";
-import { checkChromeCompatibility } from "../compatibilityChecker";
+import { isSupportApi, locToCodePoi } from "../../utils/index";
+import { checkChromeCompatibility } from "../compatibility/compatibilityChecker";
 
 /** 获取字段类型 */
 function getFieldTypeVariableDeclaratorType(type: string) {

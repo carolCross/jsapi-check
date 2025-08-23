@@ -4,8 +4,8 @@ import traverse from "@babel/traverse";
 import dealNewExpression from './ast/newExpression';
 // import dealVariableDeclarator from './ast/variableDeclarator';
 import dealCallExpression from './ast/callExpression';
-import handleTypeAnnotation from './utils/tsTypeToAstNode';
-// import dealFucExpression from './ast/fuctionExpression';
+import handleTypeAnnotation from '../utils/tsTypeToAstNode';
+// import dealFucExpression from './ast/functionExpression';
 
 /**
  * 分析code

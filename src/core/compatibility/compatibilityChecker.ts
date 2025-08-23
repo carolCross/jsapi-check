@@ -1,7 +1,7 @@
 import { Diagnostic, DiagnosticSeverity, Range, Position } from "vscode";
 import bcd from "@mdn/browser-compat-data";
-import { CommonAPIs } from "./utils/constant";
-import { chromeVersion } from "./versionControl";
+import { CommonAPIs } from "../../utils/constant";
+import { chromeVersion } from "../versionControl";
 
 type APIInfo = { name: string; path: string };
 

@@ -1,5 +1,5 @@
-import { isSupportApi, locToCodePoi } from '../utils/index';
-import { checkChromeCompatibility } from '../compatibilityChecker';
+import { isSupportApi, locToCodePoi } from '../../utils/index';
+import { checkChromeCompatibility } from '../compatibility/compatibilityChecker';
 
 /** 处理所有 new方法调用表达式 */
 function dealNewExpression (path: CalleeType, code: string, callBack: (diagnostics: any) => void) {
