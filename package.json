@@ -2,7 +2,7 @@
   "name": "jsapi-check",
   "displayName": "jsapi-check",
   "description": "A VSCode plugin to check Chrome compatibility（一款vscode插件用于检测浏览器jsapi的兼容性）support MDN document",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "publisher": "cross",
   "engines": {
     "vscode": "^1.72.0"
@@ -25,10 +25,10 @@
     "version:major": "standard-version --release-as major",
     "version:custom": "standard-version --release-as",
     "version:auto": "node scripts/version.js",
-    "publish:patch": "yarn version:patch && vsce publish",
-    "publish:minor": "yarn version:minor && vsce publish",
-    "publish:major": "yarn version:major && vsce publish",
-    "publish:auto": "yarn version:auto && vsce publish",
+    "publish:patch": "yarn version:patch && vsce publish --no-yarn",
+    "publish:minor": "yarn version:minor && vsce publish --no-yarn",
+    "publish:major": "yarn version:major && vsce publish --no-yarn",
+    "publish:auto": "yarn version:auto && vsce publish --no-yarn",
     "package": "vsce package"
   },
   "activationEvents": [
