@@ -26,12 +26,17 @@ export default class DiagnosticInstance {
   initDiagnostic = () => {
     this.diagnosticCollection =
       vscode.languages.createDiagnosticCollection(DiagnosticCommand);
+    
+    // 只监听用户主动打开的文件，不自动扫描工作区
     this.props.context.subscriptions.push(
+      // 用户打开文件时检测
       vscode.workspace.onDidOpenTextDocument(this.updateDiagnostics),
+      // 用户修改文件时检测（带防抖）
       vscode.workspace.onDidChangeTextDocument((e) => {
         // 防抖处理，避免频繁更新
         this.debouncedUpdate(e.document);
       }),
+      // 用户关闭文件时清理
       vscode.workspace.onDidCloseTextDocument((doc) => {
         this.diagnosticCollection.delete(doc.uri);
         this.fileCache.delete(doc.uri.toString()); // 清理缓存
@@ -52,14 +57,18 @@ export default class DiagnosticInstance {
   updateDiagnostics = (document: vscode.TextDocument) => {
     const languageId = document.languageId;
     const uri = document.uri.toString();
+    const filePath = document.uri.fsPath;
 
-    // 检查文件路径是否包含 node_modules
-    if (document.uri.path.includes('node_modules')) {
-      return;
-    }
-    // 检查文件行数是否超过 10000 行
+    // 性能保护：检查文件行数是否过大
     const lineCount = document.lineCount;
     if (lineCount > 10000) {
+      console.log(`跳过大文件检测: ${filePath} (${lineCount} 行)`);
+      return;
+    }
+
+    // 性能保护：对于 node_modules 中的文件，增加额外的行数限制
+    if (document.uri.path.includes('node_modules') && lineCount > 5000) {
+      console.log(`跳过大型 node_modules 文件: ${filePath} (${lineCount} 行)`);
       return;
     }
 
