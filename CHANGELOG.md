@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.0.40](https://github.com/carolCross/jsapi-check/compare/v0.0.39...v0.0.40) (2025-08-25)
+
+
+### Features
+
+* 修改文件结构 ([920228c](https://github.com/carolCross/jsapi-check/commit/920228c74adb77187b310f22eabf040e46f3891d))
+* 优化文件检测性能(1.增加防抖2.增加缓存3.释放缓存4.分批文件处理) ([f95a808](https://github.com/carolCross/jsapi-check/commit/f95a80896a595dfc16dcefd8bc00fba05f87cb67))
+
+
+
 ### [0.0.39](https://github.com/carolCross/jsapi-check/compare/v0.0.38...v0.0.39) (2024-12-24)
 
 
