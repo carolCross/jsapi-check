@@ -1,4 +1,4 @@
-import { Diagnostic, DiagnosticSeverity, Range, Position } from "vscode";
+import { Diagnostic, DiagnosticSeverity, Range, Position, DiagnosticRelatedInformation, Location, Uri } from "vscode";
 import bcd from "@mdn/browser-compat-data";
 import { CommonAPIs } from "../../utils/constant";
 import { chromeVersion } from "../versionControl";
@@ -13,7 +13,7 @@ function isSupportedInChrome(
   /** 是否支持 */
   support: boolean;
   /** mdnUrl  */
-  mdnUrl: boolean;
+  mdnUrl: string | undefined;
   /** 当前版本 */
   version: string[];
 } {
@@ -188,11 +188,21 @@ function showDiagnostics(
     function getDiagnostic(codePoi: CodePoi, api: TypeDiagnosticsApi) {
       if (!codePoi) return console.error("codePoi is null !");
       const range = generatePoiRange(codePoi);
-      return new Diagnostic(
+      
+      // 创建诊断信息
+      const diagnostic = new Diagnostic(
         range,
-        `${api.label} not supported in Chrome ${chromeVersion}, The API is supported in Chrome ${version}.[Mdnurl](${mdnUrl})`,
+        `${api.label} not supported in Chrome ${chromeVersion}. Supported in Chrome ${version}.`,
         DiagnosticSeverity.Error
       );
+      
+      // 添加可点击的MDN链接 - 最简单的方式
+      if (mdnUrl) {
+        // 直接在消息中放URL，VS Code会自动识别为可点击链接
+        diagnostic.message = `${api.label} not supported in Chrome ${chromeVersion}. Supported in Chrome ${version}. MDN: ${mdnUrl}`;
+      }
+      
+      return diagnostic;
     }
     if (codePoi) {
       return getDiagnostic(codePoi, api);

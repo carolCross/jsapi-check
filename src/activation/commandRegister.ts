@@ -18,6 +18,8 @@ export const registerCommand = (
     }
   });
   context.subscriptions.push(disposable);
+
+
 };
 
 /** 检验命令合法性 */

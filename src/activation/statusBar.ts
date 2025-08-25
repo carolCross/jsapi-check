@@ -96,9 +96,28 @@ export default class StatusBar {
     this.props.context.subscriptions.push(chromeModeCommand);
   };
 
-  /** 更新所有打开文档的诊断 */
+  /** 更新所有打开文档的诊断 - 性能优化版本 */
   setUpdateDiagnostics = () => {
-    vscode.workspace.textDocuments.forEach(this.updateDiagnostics);
+    // 性能优化：只处理当前激活的文档，避免一次性处理所有文件
+    const activeEditor = vscode.window.activeTextEditor;
+    if (activeEditor) {
+      this.updateDiagnostics(activeEditor.document);
+    }
+    
+    // 可选：延迟处理其他文档，避免阻塞UI
+    setTimeout(() => {
+      const documents = vscode.workspace.textDocuments;
+      // 限制同时处理的文件数量，避免卡顿
+      const maxFiles = 3;
+      const filesToProcess = documents.slice(0, maxFiles);
+      
+      filesToProcess.forEach((doc, index) => {
+        // 错开处理时间，避免同时解析
+        setTimeout(() => {
+          this.updateDiagnostics(doc);
+        }, index * 100); // 每个文件间隔100ms
+      });
+    }, 500); // 延迟500ms开始处理
   };
   /** 更新检测 */
   updateDiagnostics = (document: vscode.TextDocument) => {
