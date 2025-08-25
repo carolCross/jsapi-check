@@ -20,8 +20,15 @@
     "pretest": "yarn run build && yarn run lint",
     "lint": "eslint src",
     "test": "vscode-test",
-    "update": "standard-version",
-    "publish": "standard-version && vsce publish",
+    "version:patch": "standard-version --release-as patch",
+    "version:minor": "standard-version --release-as minor", 
+    "version:major": "standard-version --release-as major",
+    "version:custom": "standard-version --release-as",
+    "version:auto": "node scripts/version.js",
+    "publish:patch": "yarn version:patch && vsce publish",
+    "publish:minor": "yarn version:minor && vsce publish",
+    "publish:major": "yarn version:major && vsce publish",
+    "publish:auto": "yarn version:auto && vsce publish",
     "package": "vsce package"
   },
   "activationEvents": [
