@@ -1,76 +1,133 @@
-# jsapi-check for VS Code
+# 🚀 JS API Check for VS Code
 
-jsapi-check 是一个为 Visual Studio Code 开发的插件，它帮助开发者识别并解决 JavaScript 代码中可能存在的浏览器兼容性问题。
+> **智能检测 JavaScript API 浏览器兼容性，让开发更安心**
 
-## 功能
+[![Version](https://img.shields.io/badge/version-0.0.43-blue.svg)](https://marketplace.visualstudio.com/items?itemName=cross.jsapi-check)
+[![Downloads](https://img.shields.io/badge/downloads-1000+-green.svg)](https://marketplace.visualstudio.com/items?itemName=cross.jsapi-check)
+[![License](https://img.shields.io/badge/license-MIT-yellow.svg)](./LICENSE.txt)
 
-- **浏览器兼容性检查**：自动分析你的 JavaScript 代码，标识出可能不被所有目标浏览器支持的 API。
-- **支持不同chrome浏览器切换**：在 VS Code 问题窗口中直接显示不兼容的 API 以及相关的 MDN 文档链接。
-- **详细问题报告**：在 VS Code 问题窗口中直接显示不兼容的 API 以及相关的 MDN 文档链接。
-- **支持不同开发者模式alipayHk/wechat**：支持两种开发者模式
+## ✨ 主要功能
 
-## 支持文件格式
-- **js**：支持.js、.jsx、.mjs、.cjs 文件格式检测
-- **ts**：支持.ts、tsx、.TS 文件格式检测
-- **vue**：支持.vue、.VUE 文件格式检测
-  
+| 功能 | 描述 |
+|------|------|
+| 🔍 **智能检测** | 自动分析 JS/TS/Vue 代码中的浏览器兼容性问题 |
+| 🌐 **多浏览器支持** | 支持 Chrome、Safari、Firefox 等主流浏览器 |
+| 📱 **开发模式切换** | 支持 alipayHk、wechat 等不同开发环境 |
+| 📚 **MDN 文档链接** | 一键跳转到 MDN 查看详细 API 文档 |
+| ⚡ **实时检测** | 代码修改时实时显示兼容性警告 |
 
-## 特殊说明：
+## 🎯 支持的文件类型
 
-**为了快速看到js 兼容性效果 Chrome 版本默认为72(alipayHk), 可右下角自行切换**
+- **JavaScript**: `.js`, `.jsx`, `.mjs`, `.cjs`
+- **TypeScript**: `.ts`, `.tsx`, `.TS`
+- **Vue**: `.vue`, `.VUE`
 
-## 界面
+## 🚀 快速开始
 
-![alt text](assets/image-1.png)
+### 1️⃣ 安装扩展
 
-![alt text](assets/image.png)
+#### 方式一：VS Code Marketplace（推荐）
+1. 按 `Ctrl+Shift+X` 打开扩展面板
+2. 搜索 `jsapi-check`
+3. 点击安装
 
-![alt text](assets/image-2.png)
+#### 方式二：VSIX 文件安装
+1. 下载 [jsapi-check.vsix](https://marketplace.visualstudio.com/items?itemName=cross.jsapi-check)
+2. VS Code 中按 `Ctrl+Shift+P`
+3. 输入 `Install from VSIX`
+4. 选择下载的文件
 
-## 开发模式
-![alt text](assets/image-3.png)
+### 2️⃣ 配置浏览器版本
 
-![alt text](assets/image-4.png)
+- **默认版本**: Chrome 72 (alipayHk 模式)
+- **切换方式**: 右下角状态栏点击切换
+- **支持模式**: alipayHk、wechat 等
 
-## 安装方式
+### 3️⃣ 开始使用
 
-你可以通过以下方式安装 jsapi-check 插件：
+打开任意 JS/TS/Vue 文件，扩展会自动检测并显示兼容性问题：
 
-### 1.通过 Visual Studio Code Marketplace
+```javascript
+// 示例：Chrome 72 不支持 String.matchAll
+"hello world".matchAll(/hello/g); // ⚠️ 兼容性警告
+```
 
-1. 打开 VS Code。
-2. 转到 Extensions 视图（视图 -> 扩展或使用 `Ctrl+Shift+X` 快捷键）。
-3. 在搜索框中输入 "jsapi-check"。
-4. 找到 jsapi-check 插件，点击安装。
+## 📸 界面预览
 
-### 2.通过 VSIX 文件安装
-[Marketplace下载jsapi-check.vsix文件](https://marketplace.visualstudio.com/items?itemName=cross.jsapi-check)
+### 主界面
+![主界面](assets/image-1.png)
 
-如果你有 JSAPI-Check 的 `.vsix` 文件：
-1. 打开 VS Code。
-2. 转到 Extensions 视图。
-3. 点击 `...` 更多操作菜单，选择 "Install from VSIX..."。
-4. 选择你的 `.vsix` 文件并安装。
+### 兼容性检测
+![兼容性检测](assets/image.png)
 
+### 问题面板
+![问题面板](assets/image-2.png)
 
-## Changelog
+### 开发模式切换
+![开发模式](assets/image-3.png)
 
-[CHANGELOG](./CHANGELOG.md)
+![模式选择](assets/image-4.png)
 
-## License
+## ⚙️ 配置说明
 
-[LICENSE](./LICENSE.txt)
+### 浏览器版本设置
+- **Chrome 72**: alipayHk 开发环境
+- **Chrome 73+**: 支持更多现代 API
+- **自定义版本**: 可手动输入任意版本号
 
-## github
-[github地址](https://github.com/carolCross/jsapi-check)
+### 检测规则
+- 自动识别 ES6+ 新特性
+- 检测 DOM API 兼容性
+- 支持 TypeScript 类型推断
 
-## Star History
+## 🔧 开发相关
+
+### 项目结构
+```
+src/
+├── activation/          # 扩展激活逻辑
+├── core/               # 核心功能模块
+│   ├── ast/           # AST 解析
+│   ├── compatibility/ # 兼容性检测
+│   └── diagnostic/    # 诊断信息
+└── utils/             # 工具函数
+```
+
+### 版本管理
+```bash
+# 自动版本更新
+yarn version:auto      # 智能分析提交类型
+yarn publish:auto      # 自动发布
+
+# 手动版本更新
+yarn version:patch     # 补丁版本
+yarn version:minor     # 次要版本
+yarn version:major     # 主要版本
+```
+
+## 📚 相关链接
+
+- **Marketplace**: [jsapi-check](https://marketplace.visualstudio.com/items?itemName=cross.jsapi-check)
+- **GitHub**: [carolCross/jsapi-check](https://github.com/carolCross/jsapi-check)
+- **Changelog**: [更新日志](./CHANGELOG.md)
+- **License**: [MIT License](./LICENSE.txt)
+
+## 🌟 Star History
 
 <a href="https://star-history.com/#carolCross/jsapi-check&Date">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=carolCross/jsapi-check&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=carolCross/jsapi-check&type=Date" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?Date" />
     <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=carolCross/jsapi-check&type=Date" />
   </picture>
 </a>
 
+---
+
+<div align="center">
+
+**如果这个扩展对你有帮助，请给个 ⭐ Star 支持一下！**
+
+Made with ❤️ by [carolCross](https://github.com/carolCross)
+
+</div>
