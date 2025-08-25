@@ -3,7 +3,7 @@
 > **智能检测 JavaScript API 浏览器兼容性，让开发更安心**
 
 [![Version](https://img.shields.io/badge/version-0.0.43-blue.svg)](https://marketplace.visualstudio.com/items?itemName=cross.jsapi-check)
-[![Downloads](https://img.shields.io/badge/downloads-1000+-green.svg)](https://marketplace.visualstudio.com/items?itemName=cross.jsapi-check)
+[![Downloads](https://img.shields.io/badge/downloads-90+-green.svg)](https://marketplace.visualstudio.com/items?itemName=cross.jsapi-check)
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg)](./LICENSE.txt)
 
 ## ✨ 主要功能
