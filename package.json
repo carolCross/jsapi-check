@@ -33,7 +33,9 @@
   },
   "activationEvents": [
     "onLanguage:javascript",
+    "onLanguage:javascriptreact",
     "onLanguage:typescript",
+    "onLanguage:typescriptreact",
     "onLanguage:vue"
   ],
   "browser": "./dist/extension.js",

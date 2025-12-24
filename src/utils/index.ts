@@ -1,4 +1,4 @@
-import { CommonAPIs } from "./constant";
+import { SupportedRootAPIs } from "./constant";
 import { SourceLocation } from '@babel/types';
 
 /** 是否支持当前Api */
@@ -7,12 +7,11 @@ export const isSupportApi = (fieldType: string): boolean => {
     return false;
   }
   const firstApi = fieldType.split(".")?.[0] || "unknow";
-  return CommonAPIs.includes(firstApi);
+  return SupportedRootAPIs.includes(firstApi);
 };
 
 /** loc 生成code poi startLine 为起始行数 */
 export const locToCodePoi = (loc: SourceLocation, startLine?: number): CodePoi | null => {
-  console.log('startLine======', startLine);
   if (!loc) return null
   const start = loc.start;
   const end = loc.end;

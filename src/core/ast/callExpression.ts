@@ -4,6 +4,13 @@ import { checkChromeCompatibility } from "../compatibility/compatibilityChecker"
 import astNodeToJsType from "../../utils/astNodeToJsType";
 import handleTypeAnnotation from '../../utils/tsTypeToAstNode';
 
+function getMemberPropertyName(member: any): string | null {
+  if (!member?.property) return null;
+  if (member.property.type === "Identifier") return member.property.name;
+  if (member.property.type === "StringLiteral") return member.property.value;
+  return null;
+}
+
 /** 处理所有 分析方法调用表达式 */
 function dealCallExpression(
   path: CalleeType,
@@ -14,9 +21,21 @@ function dealCallExpression(
   startLine?: number
 ) {
   const { callee } = path.node;
-  console.log('variableTypes======', variableTypes);
-  if (callee.type === "MemberExpression") {
-    const typeName = callee.property.name;
+  if (callee.type === "Identifier") {
+    const typeName = callee.name;
+    if (isSupportApi(typeName)) {
+      const codePoi = locToCodePoi(callee?.loc, startLine);
+      const diagnostics = codePoi
+        ? checkChromeCompatibility(code, typeName, codePoi)
+        : undefined;
+      callBack && callBack(diagnostics);
+    }
+    return;
+  }
+
+  if (callee.type === "MemberExpression" || callee.type === "OptionalMemberExpression") {
+    const typeName = getMemberPropertyName(callee);
+    if (!typeName) return;
     // 检查typeName调用的对象
     const objectNode = callee.object;
     const objectType = objectNode.type;
@@ -25,21 +44,23 @@ function dealCallExpression(
 
     // 如果是标识符查看该标识符的绑定信息  意思是定义的变量如 arr  obj 等 
     if (objectType === "Identifier") {
-      const keyType = `${objectNode.loc.start.line}${objectNode.name}`;
+      const keyLine = objectNode.loc?.start.line ?? 0;
+      const keyType = `${keyLine}${objectNode.name}`;
       if (objectNode.name && variableTypes.has(keyType)) {
         parentType = variableTypes.get(keyType) || objectNode.type;
+      } else if (objectNode.name && isSupportApi(objectNode.name)) {
+        parentType = objectNode.name;
       } else {
         const binding = path.scope.getBinding(objectNode.name);
-        if (
-          binding
-        ) {
+        if (binding) {
           // 如果是变量声明器
           switch (binding.path.node.type) {
             // 变量类型
             case "VariableDeclarator":
               const init = binding.path.node.init;
-              if (init.type) {
-                const newKeyType = `${init.loc.start.line}${objectNode.name}`;
+              if (init?.type) {
+                const initLine = init.loc?.start.line ?? 0;
+                const newKeyType = `${initLine}${objectNode.name}`;
                 parentType = variableTypes.get(newKeyType) || init.type;
               }
               break;
@@ -51,13 +72,9 @@ function dealCallExpression(
                 const astNode = handleTypeAnnotation(data);
                 // 如果ts类型为any，则根据表达式进行类型推断
                 if (astNode?.name === 'any') {
-                  const expressionType = init.expression.type;
-                  parentType = expressionType
-                  // const type = 
-                  // variableTypes[url].set(keyType, expression);
-                } else if(astNode?.type) {
-                  parentType = astNode.type
-                  // variableTypes[url].set(keyType, astNode.type);
+                  parentType = "unknown";
+                } else if (astNode?.type) {
+                  parentType = astNode.type;
                 }
               }
               break;
@@ -74,8 +91,6 @@ function dealCallExpression(
           //       parentType = variableTypes.get(newKeyType) || init.type;
           //     }
           //   } else if ()
-        } else {
-          parentType = objectNode.type;
         }
       }
 
@@ -88,6 +103,9 @@ function dealCallExpression(
       parentType = objectType;
     }
 
+    if (!parentType) {
+      parentType = objectNode.type;
+    }
     const diagnostics = getDiagnosticsByType(code, callee, typeName, parentType, startLine);
     callBack && callBack(diagnostics);
 
@@ -96,7 +114,9 @@ function dealCallExpression(
 
   // 判断具体type {parentType.childType} 如 String.matchAll等
   function getDiagnosticsByType (code: string, callee: any, typeName: string, type: string, startLine?: number) {
-    const parentType = astNodeToJsType(type);
+    if (!type) return undefined;
+    const resolvedType = isSupportApi(type) ? type : astNodeToJsType(type);
+    const parentType = resolvedType;
     const fullTypeName = `${parentType}.${typeName}`;
     if (parentType === "unknown") return undefined;
     const isSupport = isSupportApi(fullTypeName);
@@ -112,4 +132,3 @@ function dealCallExpression(
   }
 
 export default dealCallExpression;
-
