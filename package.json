@@ -17,7 +17,7 @@
     "compile": "tsc -p ./",
     "watch": "node esbuild.js --watch",
     "build": "node esbuild.js",
-    "pretest": "yarn run build && yarn run lint",
+    "pretest": "yarn run build && yarn run lint && yarn run compile",
     "lint": "eslint src",
     "test": "vscode-test",
     "version:patch": "standard-version --release-as patch",
