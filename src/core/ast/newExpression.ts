@@ -8,8 +8,17 @@ function dealNewExpression (path: CalleeType, code: string, callBack: (diagnosti
     if (callee.type === "Identifier") {// 单层
       typeName = callee.name;
     } else if (callee.type === "MemberExpression") { // 可以将其看作是new Intl.Locale 两层
-      typeName = `${callee.object?.name}.${callee.property?.name}`;
+      const propertyName =
+        callee.property?.type === "Identifier"
+          ? callee.property.name
+          : callee.property?.type === "StringLiteral"
+            ? callee.property.value
+            : undefined;
+      if (propertyName) {
+        typeName = `${callee.object?.name}.${propertyName}`;
+      }
     }
+    if (!typeName) return;
     const isSupport = isSupportApi(typeName);
     if (isSupport) {
         const codePoi = locToCodePoi(callee?.loc);
