@@ -25,6 +25,17 @@ export default class StatusBar {
   }
   /** 加载状态栏 */
   initStatusBar = () => {
+    const storedMode = this.props.context.globalState.get<keyof typeof ModeChromeVersionMap>("jsapi-check.mode");
+    if (storedMode && ModeChromeVersionMap[storedMode]) {
+      this.currentMode = storedMode;
+      setChromeVersion(ModeChromeVersionMap[storedMode]);
+    } else {
+      const storedVersion = this.props.context.globalState.get<number>("jsapi-check.chromeVersion");
+      if (storedVersion) {
+        setChromeVersion(storedVersion);
+      }
+    }
+
     // 创建状态栏项
     this.inputStatusBar = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Right,
@@ -66,6 +77,7 @@ export default class StatusBar {
         if (input) {
           setChromeVersion(parseInt(input, 10));
           this.inputStatusBar.text = `当前版本: ${chromeVersion}`;
+          await this.props.context.globalState.update("jsapi-check.chromeVersion", chromeVersion);
           vscode.window.showInformationMessage(
             `chrome 设置为 ${chromeVersion}`
           );
@@ -88,6 +100,8 @@ export default class StatusBar {
           setChromeVersion(ModeChromeVersionMap[this.currentMode]);
           this.modeStatusBar.text = `${ModeStatusBarText}${this.currentMode}`;
           this.inputStatusBar.text = `Chrome Version: ${ModeChromeVersionMap[this.currentMode]}`;
+          await this.props.context.globalState.update("jsapi-check.mode", this.currentMode);
+          await this.props.context.globalState.update("jsapi-check.chromeVersion", ModeChromeVersionMap[this.currentMode]);
           vscode.window.showInformationMessage(`已切换到 ${selectedMode} 模式`);
           this.setUpdateDiagnostics();
         }

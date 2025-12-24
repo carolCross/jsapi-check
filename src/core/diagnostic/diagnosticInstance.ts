@@ -79,9 +79,11 @@ export default class DiagnosticInstance {
     // 性能优化：检查缓存
     const currentContent = document.getText();
     const cached = this.fileCache.get(uri);
-    if (cached && 
-        cached.content === currentContent && 
-        Date.now() - cached.timestamp < this.CACHE_TTL) {
+    if (
+      cached &&
+      cached.content === currentContent &&
+      Date.now() - cached.timestamp < this.CACHE_TTL
+    ) {
       // 使用缓存的结果
       this.diagnosticCollection.set(document.uri, cached.diagnostics);
       return;
@@ -102,11 +104,17 @@ export default class DiagnosticInstance {
     }
 
     // 异步解析，避免阻塞UI
-    this.parseCodeAsync(code, document, startLine, uri);
+    this.parseCodeAsync(code, document, startLine, uri, currentContent);
   };
 
   /** 异步解析代码 */
-  private parseCodeAsync = async (code: string, document: vscode.TextDocument, startLine: number, uri: string) => {
+  private parseCodeAsync = async (
+    code: string,
+    document: vscode.TextDocument,
+    startLine: number,
+    uri: string,
+    fullContent: string
+  ) => {
     try {
       // 使用 Promise.resolve().then() 避免阻塞UI线程
       const diagnostics = await new Promise<vscode.Diagnostic[]>((resolve) => {
@@ -119,7 +127,7 @@ export default class DiagnosticInstance {
       // 更新诊断和缓存
       this.diagnosticCollection.set(document.uri, diagnostics);
       this.fileCache.set(uri, {
-        content: code,
+        content: fullContent,
         diagnostics,
         timestamp: Date.now()
       });

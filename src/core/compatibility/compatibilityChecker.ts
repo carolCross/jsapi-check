@@ -1,9 +1,12 @@
-import { Diagnostic, DiagnosticSeverity, Range, Position, DiagnosticRelatedInformation, Location, Uri } from "vscode";
+import { Diagnostic, DiagnosticSeverity, Range, Position, Uri } from "vscode";
 import bcd from "@mdn/browser-compat-data";
-import { CommonAPIs } from "../../utils/constant";
+import { BuiltinRootAPIs, WebRootAPIs, WebRootAliases } from "../../utils/constant";
 import { chromeVersion } from "../versionControl";
 
 type APIInfo = { name: string; path: string };
+type ApiIndexEntry = { label: string; path: string; name: string };
+
+let apiIndexCache: Map<string, ApiIndexEntry> | null = null;
 
 /** support api in Chrome */
 function isSupportedInChrome(
@@ -19,36 +22,55 @@ function isSupportedInChrome(
 } {
   const supportData = apiPath
     .split(".")
-    .reduce((obj: any, key) => obj[key], bcd);
-  const chromeSupport = supportData.__compat.support.chrome;
+    .reduce((obj: any, key) => obj?.[key], bcd);
+  const chromeSupport = supportData?.__compat?.support?.chrome;
+  if (!chromeSupport) {
+    return { support: false, mdnUrl: supportData?.__compat?.mdn_url, version: [] };
+  }
+
+  const parseVersion = (val: string) => {
+    const parsed = parseFloat(val);
+    return Number.isNaN(parsed) ? null : parsed;
+  };
+  const isSupportedEntry = (support: { version_added?: any; version_removed?: any }) => {
+    const added = support.version_added;
+    if (added === true) return true;
+    if (typeof added === "string") {
+      const addedVersion = parseVersion(added);
+      if (addedVersion === null) return false;
+      const removed = support.version_removed;
+      if (typeof removed === "string") {
+        const removedVersion = parseVersion(removed);
+        if (removedVersion !== null && version >= removedVersion) return false;
+      }
+      return addedVersion <= version;
+    }
+    return false;
+  };
+
   if (Array.isArray(chromeSupport)) {
-    const reuslt = chromeSupport.some(
-      (support) =>
-        typeof support.version_added === "string" &&
-        parseFloat(support.version_added) <= version
-    );
+    const reuslt = chromeSupport.some((support) => isSupportedEntry(support));
     return {
       support: reuslt,
-      mdnUrl: supportData.__compat.mdn_url,
+      mdnUrl: supportData?.__compat?.mdn_url,
       version: chromeSupport.map((support) => support.version_added),
     };
-  } else {
-    const reuslt =
-      typeof chromeSupport.version_added === "string" &&
-      parseFloat(chromeSupport.version_added) <= version;
-    return {
-      support: reuslt,
-      mdnUrl: supportData.__compat.mdn_url,
-      version: [chromeSupport.version_added],
-    };
   }
+
+  const reuslt = isSupportedEntry(chromeSupport);
+  return {
+    support: reuslt,
+    mdnUrl: supportData?.__compat?.mdn_url,
+    version: [chromeSupport.version_added],
+  };
 }
 
 /** 获取所有api 列表 */
 function getAllAPIs(
   data: any,
   pathPrefix: string = "",
-  visited = new WeakSet()
+  visited = new WeakSet(),
+  rootAllowList?: string[]
 ): APIInfo[] {
   // return apiList;
   let apiList: APIInfo[] = [];
@@ -59,7 +81,9 @@ function getAllAPIs(
     for (const key in data) {
       const title = pathPrefix + key;
       const joinTitleArray = title.split(".");
-      const hasApi = CommonAPIs.some((label) => joinTitleArray.includes(label));
+      const hasApi = rootAllowList
+        ? rootAllowList.some((label) => joinTitleArray.includes(label))
+        : true;
       if (
         hasApi &&
         data[key] &&
@@ -69,7 +93,7 @@ function getAllAPIs(
         apiList.push({ name: pathPrefix + key, path: pathPrefix + key });
       }
       const subPathPrefix = pathPrefix + key + ".";
-      apiList = apiList.concat(getAllAPIs(data[key], subPathPrefix, visited));
+      apiList = apiList.concat(getAllAPIs(data[key], subPathPrefix, visited, rootAllowList));
     }
   }
 
@@ -94,27 +118,68 @@ function filterCommonAPIs(allAPIs: APIInfo[]): APIInfo[] {
   return filterData;
 }
 
-// `startPos` 和 `endPos` 是字符在字符串中的索引位置
-function pickTextStartEndPoi(
-  fullText: string,
-  startPos: Record<"character", number>,
-  endPos: Record<"character", number>
+function addApiIndexEntry(
+  index: Map<string, ApiIndexEntry>,
+  entry: { label: string; path: string; name?: string }
 ) {
-  return fullText.substring(startPos.character, endPos.character);
+  const name = entry.name ?? entry.label.split(".").pop() ?? entry.label;
+  index.set(entry.label, { label: entry.label, path: entry.path, name });
 }
 
-/** 获取所有 可用的useApiList 排除为支持的api列表 */
-function getAllUseApiList() {
-  const javascript = bcd.javascript;
-  const builtins = javascript.builtins;
-  const allAPIs = getAllAPIs(builtins);
-  const filterApis = filterCommonAPIs(allAPIs);
-  const apiLists = filterApis.map((item) => ({
-    ...item,
-    path: `javascript.builtins.${item.path}`,
-    label: item.path,
-  }));
-  return apiLists;
+/** 构建 API 索引（带缓存） */
+function getApiIndex(): Map<string, ApiIndexEntry> {
+  if (apiIndexCache) return apiIndexCache;
+
+  const index = new Map<string, ApiIndexEntry>();
+  const builtins = bcd?.javascript?.builtins;
+
+  if (builtins) {
+    const allAPIs = getAllAPIs(builtins, "", new WeakSet(), BuiltinRootAPIs);
+    const filterApis = filterCommonAPIs(allAPIs);
+    filterApis.forEach((item) => {
+      addApiIndexEntry(index, {
+        label: item.path,
+        path: `javascript.builtins.${item.path}`,
+        name: item.name,
+      });
+    });
+  }
+
+  WebRootAPIs.forEach((root) => {
+    const rootData = (bcd as any)?.api?.[root];
+    if (!rootData || typeof rootData !== "object") return;
+    if (rootData.__compat) {
+      addApiIndexEntry(index, { label: root, path: `api.${root}`, name: root });
+    }
+    const rootApis = getAllAPIs(rootData, `${root}.`, new WeakSet());
+    const filterRootApis = filterCommonAPIs(rootApis);
+    filterRootApis.forEach((item) => {
+      const label = item.path;
+      const path = `api.${item.path}`;
+      addApiIndexEntry(index, { label, path, name: item.name });
+      if (label.endsWith("_static")) {
+        const alias = label.replace(/_static$/, "");
+        addApiIndexEntry(index, { label: alias, path, name: item.name?.replace(/_static$/, "") });
+      }
+    });
+  });
+
+  Object.entries(WebRootAliases).forEach(([alias, root]) => {
+    const rootPrefix = `${root}.`;
+    const aliasEntries: ApiIndexEntry[] = [];
+    for (const entry of index.values()) {
+      if (entry.label === root) {
+        aliasEntries.push({ label: alias, path: entry.path, name: alias });
+      } else if (entry.label.startsWith(rootPrefix)) {
+        const aliasLabel = `${alias}${entry.label.slice(root.length)}`;
+        aliasEntries.push({ label: aliasLabel, path: entry.path, name: entry.name });
+      }
+    }
+    aliasEntries.forEach((entry) => addApiIndexEntry(index, entry));
+  });
+
+  apiIndexCache = index;
+  return index;
 }
 
 /** poi => position */
@@ -178,7 +243,7 @@ function showDiagnostics(
   codePoi?: CodePoi
 ): Diagnostic | undefined | void {
   if (!api) {
-    return console.warn("未找到api======", api);
+    return;
   }
   const { support, version, mdnUrl } = isSupportedInChrome(
     api.path,
@@ -196,10 +261,11 @@ function showDiagnostics(
         DiagnosticSeverity.Error
       );
       
-      // 添加可点击的MDN链接 - 最简单的方式
       if (mdnUrl) {
-        // 直接在消息中放URL，VS Code会自动识别为可点击链接
-        diagnostic.message = `${api.label} not supported in Chrome ${chromeVersion}. Supported in Chrome ${version}. MDN: ${mdnUrl}`;
+        diagnostic.code = {
+          value: "MDN参考链接",
+          target: Uri.parse(mdnUrl),
+        };
       }
       
       return diagnostic;
@@ -220,11 +286,10 @@ function checkChromeCompatibility(
   typeName: string,
   /** 代码高亮位置 */
   codePoi: CodePoi
-): Diagnostic {
-  const apisToCheck = getAllUseApiList();
-  const api = (apisToCheck || []).find((item) => item.label === typeName);
+): Diagnostic | undefined {
+  const api = getApiIndex().get(typeName);
   const diagnostic = showDiagnostics(code, api, codePoi);
-  return diagnostic as Diagnostic;
+  return diagnostic as Diagnostic | undefined;
 }
 
 export { checkChromeCompatibility };

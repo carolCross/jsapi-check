@@ -11,10 +11,12 @@
 | 功能 | 描述 |
 |------|------|
 | 🔍 **智能检测** | 自动分析 JS/TS/Vue 代码中的浏览器兼容性问题 |
-| 🌐 **多浏览器支持** | 支持 Chrome、Safari、Firefox 等主流浏览器 |
+| 🌐 **Chrome 版本检测** | 当前仅支持 Chrome 版本兼容性检测 |
 | 📱 **开发模式切换** | 支持 alipayHk、wechat 等不同开发环境 |
 | 📚 **MDN 文档链接** | 一键跳转到 MDN 查看详细 API 文档 |
+| 🧩 **内建 + 常用 Web API** | 覆盖内建对象与常见 Web API（如 `fetch` / `URL`） |
 | ⚡ **实时检测** | 代码修改时实时显示兼容性警告 |
+| 🛡️ **性能优化** | 防抖、缓存、大文件保护，避免卡顿 |
 
 ## 🎯 支持的文件类型
 
@@ -39,17 +41,18 @@
 
 ### 2️⃣ 配置浏览器版本
 
-- **默认版本**: Chrome 72 (alipayHk 模式)
+- **默认版本**: Chrome 76 (alipayHk 模式)
 - **切换方式**: 右下角状态栏点击切换
 - **支持模式**: alipayHk、wechat 等
+- **配置记忆**: 版本与模式会持久化，重启后保持
 
 ### 3️⃣ 开始使用
 
 打开任意 JS/TS/Vue 文件，扩展会自动检测并显示兼容性问题：
 
 ```javascript
-// 示例：Chrome 72 不支持 String.matchAll
-"hello world".matchAll(/hello/g); // ⚠️ 兼容性警告
+// 示例：Chrome 76 不支持 String.prototype.replaceAll
+"hello world".replaceAll("hello", "hi"); // ⚠️ 兼容性警告
 ```
 
 ## 📸 界面预览
@@ -76,9 +79,15 @@
 - **自定义版本**: 可手动输入任意版本号
 
 ### 检测规则
-- 自动识别 ES6+ 新特性
-- 检测 DOM API 兼容性
-- 支持 TypeScript 类型推断
+- 基于 AST 解析，覆盖常见内建对象与 Web API
+- Vue 文件仅解析 `<script>` 内容
+- TypeScript 支持基础类型推断
+- 只检测当前打开的文件，避免扫描整个工作区
+
+### 已知限制
+- 当前仅支持 **Chrome** 版本兼容性
+- 动态属性/复杂类型推断可能导致漏报或误报
+- Web API 覆盖为常见集合，非完整浏览器 API
 
 ## 🔧 开发相关
 
@@ -91,6 +100,18 @@ src/
 │   ├── compatibility/ # 兼容性检测
 │   └── diagnostic/    # 诊断信息
 └── utils/             # 工具函数
+```
+
+### 本地调试（方式二：命令行启动）
+```bash
+# 安装依赖（首次）
+yarn install
+
+# 启动构建监听
+yarn watch
+
+# 启动 Extension Host
+code --extensionDevelopmentPath=/Users/carolcross/Downloads/vscode-gzc
 ```
 
 ### 版本管理

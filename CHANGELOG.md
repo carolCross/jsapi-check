@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [2.0.0](https://github.com/carolCross/jsapi-check/compare/v1.1.4...v2.0.0) (2025-12-24)
+
+
+### Features
+
+* 提升兼容性检测性能与覆盖范围，增强 React 支持 ([fbce7b3](https://github.com/carolCross/jsapi-check/commit/fbce7b3eebf831cc08a3c1cc08a00d54c55d93ee))
+
+
+
 ## [1.1.4](https://github.com/carolCross/jsapi-check/compare/v1.1.3...v1.1.4) (2025-08-25)
 
 
