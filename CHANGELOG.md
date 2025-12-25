@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.7](https://github.com/carolCross/jsapi-check/compare/v2.0.5...v2.0.7) (2025-12-25)
+
+
+### Bug Fixes
+
+* 偶发不生效 ([cb09b20](https://github.com/carolCross/jsapi-check/commit/cb09b20f1a2e8be8be0070d8d9ae8c48b6ba7caa))
+
+
+### Performance Improvements
+
+* 串行化诊断解析并限制可见文件扫描 ([3fbebd1](https://github.com/carolCross/jsapi-check/commit/3fbebd1877efe8095222b508d99ac0f9b614994d))
+
+
+
 ## [2.0.5](https://github.com/carolCross/jsapi-check/compare/v2.0.4...v2.0.5) (2025-12-25)
 
 
