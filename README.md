@@ -42,7 +42,7 @@
 
 ### 2️⃣ 配置浏览器版本
 
-- **默认版本**: Chrome 76 (alipayHk 模式)
+- **默认版本**: Chrome 69 (alipayHk 模式)
 - **切换方式**: 右下角状态栏点击切换
 - **支持模式**: alipayHk、wechat 等
 - **配置记忆**: 版本与模式会持久化，重启后保持
@@ -52,7 +52,7 @@
 打开任意 JS/TS/Vue 文件，扩展会自动检测并显示兼容性问题：
 
 ```javascript
-// 示例：Chrome 76 不支持 String.prototype.replaceAll
+// 示例：Chrome 69 不支持 String.prototype.replaceAll
 "hello world".replaceAll("hello", "hi"); // ⚠️ 兼容性警告
 ```
 
