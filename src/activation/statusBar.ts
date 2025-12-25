@@ -7,7 +7,7 @@ type PropsType = {
   /** context 事例 */
   context: vscode.ExtensionContext;
   /** 回调 */
-  updateDiagnostics: (document: vscode.TextDocument) => void;
+  updateDiagnostics: (document: vscode.TextDocument, options?: { force?: boolean }) => void;
 };
 /* 底部状态栏 */
 export default class StatusBar {
@@ -115,7 +115,7 @@ export default class StatusBar {
     // 性能优化：只处理当前激活的文档，避免一次性处理所有文件
     const activeEditor = vscode.window.activeTextEditor;
     if (activeEditor) {
-      this.updateDiagnostics(activeEditor.document);
+      this.updateDiagnostics(activeEditor.document, { force: true });
     }
     
     // 可选：延迟处理其他文档，避免阻塞UI
@@ -128,13 +128,13 @@ export default class StatusBar {
       filesToProcess.forEach((doc, index) => {
         // 错开处理时间，避免同时解析
         setTimeout(() => {
-          this.updateDiagnostics(doc);
+          this.updateDiagnostics(doc, { force: true });
         }, index * 100); // 每个文件间隔100ms
       });
     }, 500); // 延迟500ms开始处理
   };
   /** 更新检测 */
-  updateDiagnostics = (document: vscode.TextDocument) => {
-    this.props?.updateDiagnostics(document);
+  updateDiagnostics = (document: vscode.TextDocument, options?: { force?: boolean }) => {
+    this.props?.updateDiagnostics(document, options);
   };
 }

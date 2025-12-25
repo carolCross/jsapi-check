@@ -15,6 +15,8 @@ export default class DiagnosticInstance {
   // 性能优化：添加防抖和缓存
   private updateTimeout: NodeJS.Timeout | undefined;
   private fileCache = new Map<string, { content: string; diagnostics: vscode.Diagnostic[]; timestamp: number }>();
+  private runId = 0;
+  private latestRunByUri = new Map<string, number>();
   private readonly CACHE_TTL = 5000; // 缓存5秒
   private readonly DEBOUNCE_DELAY = 300; // 防抖300ms
   
@@ -54,7 +56,7 @@ export default class DiagnosticInstance {
     }, this.DEBOUNCE_DELAY);
   };
   /** 更新检测 */
-  updateDiagnostics = (document: vscode.TextDocument) => {
+  updateDiagnostics = (document: vscode.TextDocument, options?: { force?: boolean }) => {
     const languageId = document.languageId;
     const uri = document.uri.toString();
     const filePath = document.uri.fsPath;
@@ -80,6 +82,7 @@ export default class DiagnosticInstance {
     const currentContent = document.getText();
     const cached = this.fileCache.get(uri);
     if (
+      !options?.force &&
       cached &&
       cached.content === currentContent &&
       Date.now() - cached.timestamp < this.CACHE_TTL
@@ -104,7 +107,9 @@ export default class DiagnosticInstance {
     }
 
     // 异步解析，避免阻塞UI
-    this.parseCodeAsync(code, document, startLine, uri, currentContent);
+    const currentRunId = ++this.runId;
+    this.latestRunByUri.set(uri, currentRunId);
+    this.parseCodeAsync(code, document, startLine, uri, currentContent, currentRunId);
   };
 
   /** 异步解析代码 */
@@ -113,7 +118,8 @@ export default class DiagnosticInstance {
     document: vscode.TextDocument,
     startLine: number,
     uri: string,
-    fullContent: string
+    fullContent: string,
+    runId: number
   ) => {
     try {
       // 使用 Promise.resolve().then() 避免阻塞UI线程
@@ -123,6 +129,10 @@ export default class DiagnosticInstance {
           resolve(analyzeCode(code, document?.uri.path, startLine));
         });
       });
+
+      if (this.latestRunByUri.get(uri) !== runId) {
+        return;
+      }
 
       // 更新诊断和缓存
       this.diagnosticCollection.set(document.uri, diagnostics);
