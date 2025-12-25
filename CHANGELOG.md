@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.5](https://github.com/carolCross/jsapi-check/compare/v2.0.4...v2.0.5) (2025-12-25)
+
+
+### Bug Fixes
+
+* alipayHK 版本为69版本 ([6007595](https://github.com/carolCross/jsapi-check/commit/6007595961deaeea097a881f1b437b6ce7a3db20))
+
+
+
 ## [2.0.4](https://github.com/carolCross/jsapi-check/compare/v2.0.3...v2.0.4) (2025-12-25)
 
 
