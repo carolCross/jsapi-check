@@ -1,4 +1,4 @@
-import { Diagnostic } from "vscode";
+import { DiagnosticPayload } from "../diagnostic/diagnosticTypes";
 import { isSupportApi, locToCodePoi } from "../../utils/index";
 import { checkChromeCompatibility } from "../compatibility/compatibilityChecker";
 import astNodeToJsType from "../../utils/astNodeToJsType";
@@ -15,7 +15,7 @@ function getMemberPropertyName(member: any): string | null {
 function dealCallExpression(
   path: CalleeType,
   code: string,
-  callBack: (diagnostics?: Diagnostic) => any | undefined,
+  callBack: (diagnostics?: DiagnosticPayload) => any | undefined,
   variableTypes: Map<string, string>,
   /** 起始行数 */
   startLine?: number

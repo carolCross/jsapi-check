@@ -1,6 +1,6 @@
-import { Diagnostic } from "vscode";
 import { isSupportApi, locToCodePoi } from "../../utils/index";
 import { checkChromeCompatibility } from "../compatibility/compatibilityChecker";
+import { DiagnosticPayload } from "../diagnostic/diagnosticTypes";
 
 /** 获取字段类型 */
 function getFieldTypeVariableDeclaratorType(type: string) {
@@ -33,7 +33,7 @@ function getFieldTypeVariableDeclaratorType(type: string) {
 function dealFucDeclarator(
   path: CalleeType,
   code: string,
-  callBack: (diagnostics?: Diagnostic) => any | undefined
+  callBack: (diagnostics?: DiagnosticPayload) => any | undefined
 ) {
   const { callee } = path.node;
   if (callee.type === "MemberExpression") {

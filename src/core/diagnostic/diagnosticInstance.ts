@@ -1,7 +1,10 @@
 import * as vscode from "vscode";
+import path from "path";
+import { Worker } from "worker_threads";
 import { DiagnosticCommand, supportLanguageList } from "../../utils/constant";
 import { chromeVersion } from "../versionControl";
 import { analyzeCode } from '../astParse';
+import { DiagnosticPayload, DiagnosticSeverityLevel } from "./diagnosticTypes";
 
 /** props */
 type PropsType = {
@@ -13,6 +16,7 @@ type PropsType = {
 export default class DiagnosticInstance {
   props = {} as PropsType;
   diagnosticCollection = {} as vscode.DiagnosticCollection;
+  private outputChannel = vscode.window.createOutputChannel("JS API Check");
   // 性能优化：添加防抖和缓存
   private updateTimeouts = new Map<string, NodeJS.Timeout>();
   private fileCache = new Map<
@@ -42,6 +46,12 @@ export default class DiagnosticInstance {
   private isParsing = false;
   private readonly CACHE_TTL = 5000; // 缓存5秒
   private readonly DEBOUNCE_DELAY = 300; // 防抖300ms
+  private worker?: Worker;
+  private workerRequests = new Map<
+    number,
+    { resolve: (value: DiagnosticPayload[]) => void; reject: (error: Error) => void }
+  >();
+  private workerRequestId = 0;
   
   constructor(pr: PropsType) {
     this.props = pr;
@@ -51,6 +61,10 @@ export default class DiagnosticInstance {
   initDiagnostic = () => {
     this.diagnosticCollection =
       vscode.languages.createDiagnosticCollection(DiagnosticCommand);
+    this.props.context.subscriptions.push(this.outputChannel);
+    this.props.context.subscriptions.push({
+      dispose: () => this.disposeWorker()
+    });
     
     // 只监听用户主动打开的文件，不自动扫描工作区
     this.props.context.subscriptions.push(
@@ -92,6 +106,131 @@ export default class DiagnosticInstance {
     );
   };
 
+  private mapSeverity = (severity: DiagnosticSeverityLevel) => {
+    switch (severity) {
+      case "warning":
+        return vscode.DiagnosticSeverity.Warning;
+      case "info":
+        return vscode.DiagnosticSeverity.Information;
+      case "hint":
+        return vscode.DiagnosticSeverity.Hint;
+      default:
+        return vscode.DiagnosticSeverity.Error;
+    }
+  };
+
+  private toVscodeDiagnostic = (payload: DiagnosticPayload) => {
+    const range = new vscode.Range(
+      new vscode.Position(payload.range.start.line, payload.range.start.character),
+      new vscode.Position(payload.range.end.line, payload.range.end.character)
+    );
+    const diagnostic = new vscode.Diagnostic(
+      range,
+      payload.message,
+      this.mapSeverity(payload.severity)
+    );
+    if (payload.mdnUrl) {
+      diagnostic.code = {
+        value: "MDN参考链接",
+        target: vscode.Uri.parse(payload.mdnUrl),
+      };
+    }
+    return diagnostic;
+  };
+
+  private buildDiagnostics = (payloads: DiagnosticPayload[]) => {
+    return payloads.map((payload) => this.toVscodeDiagnostic(payload));
+  };
+
+  private log = (message: string) => {
+    const timestamp = new Date().toISOString();
+    this.outputChannel.appendLine(`[${timestamp}] ${message}`);
+  };
+
+  private ensureWorker = () => {
+    if (this.worker) return;
+    try {
+      const workerPath = path.join(
+        this.props.context.extensionPath,
+        "dist",
+        "diagnosticWorker.js"
+      );
+      this.worker = new Worker(workerPath);
+      this.log(`诊断 worker 已启动: ${workerPath}`);
+      this.worker.on(
+        "message",
+        (message: { id: number; diagnostics?: DiagnosticPayload[]; error?: string }) => {
+          const pending = this.workerRequests.get(message.id);
+          if (!pending) return;
+          this.workerRequests.delete(message.id);
+          if (message.error) {
+            pending.reject(new Error(message.error));
+          } else {
+            pending.resolve(message.diagnostics ?? []);
+          }
+        }
+      );
+      this.worker.on("error", (error) => {
+        this.log(`诊断 worker 出错: ${error instanceof Error ? error.message : String(error)}`);
+        this.workerRequests.forEach(({ reject }) => {
+          reject(error instanceof Error ? error : new Error(String(error)));
+        });
+        this.workerRequests.clear();
+        this.worker?.terminate();
+        this.worker = undefined;
+      });
+      this.worker.on("exit", (code) => {
+        if (code !== 0) {
+          this.log(`诊断 worker 异常退出，code=${code}`);
+        }
+        const exitError = new Error(`diagnostic worker exited with code ${code}`);
+        this.workerRequests.forEach(({ reject }) => {
+          reject(exitError);
+        });
+        this.workerRequests.clear();
+        this.worker = undefined;
+      });
+    } catch (error) {
+      this.log(`初始化诊断 worker 失败: ${error instanceof Error ? error.message : String(error)}`);
+      this.worker = undefined;
+    }
+  };
+
+  private disposeWorker = () => {
+    if (this.worker) {
+      this.worker.terminate();
+      this.worker = undefined;
+      this.workerRequests.clear();
+    }
+  };
+
+  private analyzeInWorker = async (
+    code: string,
+    url: string,
+    startLine: number
+  ): Promise<DiagnosticPayload[]> => {
+    this.ensureWorker();
+    if (!this.worker) {
+      return analyzeCode(code, url, startLine);
+    }
+    const id = ++this.workerRequestId;
+    return new Promise((resolve, reject) => {
+      this.workerRequests.set(id, { resolve, reject });
+      try {
+        this.worker?.postMessage({
+          id,
+          code,
+          url,
+          startLine,
+          chromeVersion,
+        });
+      } catch (error) {
+        this.workerRequests.delete(id);
+        reject(error instanceof Error ? error : new Error(String(error)));
+      }
+    });
+  };
+
   /** 防抖更新 */
   private debouncedUpdate = (document: vscode.TextDocument) => {
     const uri = document.uri.toString();
@@ -114,13 +253,13 @@ export default class DiagnosticInstance {
     // 性能保护：检查文件行数是否过大
     const lineCount = document.lineCount;
     if (lineCount > 10000) {
-      console.log(`跳过大文件检测: ${filePath} (${lineCount} 行)`);
+      this.log(`跳过大文件检测: ${filePath} (${lineCount} 行)`);
       return;
     }
 
     // 性能保护：对于 node_modules 中的文件，增加额外的行数限制
     if (document.uri.path.includes('node_modules') && lineCount > 5000) {
-      console.log(`跳过大型 node_modules 文件: ${filePath} (${lineCount} 行)`);
+      this.log(`跳过大型 node_modules 文件: ${filePath} (${lineCount} 行)`);
       return;
     }
 
@@ -208,11 +347,18 @@ export default class DiagnosticInstance {
           continue;
         }
 
-        const diagnostics = await new Promise<vscode.Diagnostic[]>((resolve) => {
-          Promise.resolve().then(() => {
-            resolve(analyzeCode(task.code, task.document?.uri.path, task.startLine));
-          });
-        });
+        let payloads: DiagnosticPayload[] = [];
+        try {
+          payloads = await this.analyzeInWorker(
+            task.code,
+            task.document?.uri.path,
+            task.startLine
+          );
+        } catch (error) {
+          this.log(`Worker 解析失败，降级到主线程: ${error instanceof Error ? error.message : String(error)}`);
+          payloads = analyzeCode(task.code, task.document?.uri.path, task.startLine);
+        }
+        const diagnostics = this.buildDiagnostics(payloads);
 
         if (this.latestRunByUri.get(task.uri) !== task.runId) {
           continue;
@@ -228,7 +374,7 @@ export default class DiagnosticInstance {
         });
       }
     } catch (error) {
-      console.error('解析代码时出错:', error);
+      this.log(`解析代码时出错: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       this.isParsing = false;
       if (this.pendingParses.size > 0) {
