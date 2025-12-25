@@ -120,7 +120,7 @@ export default class StatusBar {
     
     // 可选：延迟处理其他文档，避免阻塞UI
     setTimeout(() => {
-      const documents = vscode.workspace.textDocuments;
+      const documents = vscode.window.visibleTextEditors.map((editor) => editor.document);
       // 限制同时处理的文件数量，避免卡顿
       const maxFiles = 3;
       const filesToProcess = documents.slice(0, maxFiles);
