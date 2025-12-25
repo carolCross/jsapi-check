@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.6](https://github.com/carolCross/jsapi-check/compare/v2.0.5...v2.0.6) (2025-12-25)
+
+
+### Bug Fixes
+
+* 修复诊断队列卡住与切换漏检 ([3e2c244](https://github.com/carolCross/jsapi-check/commit/3e2c244977a9c5b9577790362f282bc76b31499f))
+
+
+
 ## [2.0.5](https://github.com/carolCross/jsapi-check/compare/v2.0.4...v2.0.5) (2025-12-25)
 
 
