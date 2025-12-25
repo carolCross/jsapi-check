@@ -1,7 +1,7 @@
 /** 常量列表 */
 
 /** 默认版本 */
-export const DefaultVerison = 76; 
+export const DefaultVerison = 69; 
 /** 目前支持检测语言 */
 export const supportLanguageList = [
     'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue'
