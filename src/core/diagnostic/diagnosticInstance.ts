@@ -13,10 +13,22 @@ export default class DiagnosticInstance {
   props = {} as PropsType;
   diagnosticCollection = {} as vscode.DiagnosticCollection;
   // 性能优化：添加防抖和缓存
-  private updateTimeout: NodeJS.Timeout | undefined;
-  private fileCache = new Map<string, { content: string; diagnostics: vscode.Diagnostic[]; timestamp: number }>();
+  private updateTimeouts = new Map<string, NodeJS.Timeout>();
+  private fileCache = new Map<string, { content: string; diagnostics: vscode.Diagnostic[]; timestamp: number; version: number }>();
   private readonly CACHE_TTL = 5000; // 缓存5秒
   private readonly DEBOUNCE_DELAY = 300; // 防抖300ms
+  private pendingParses = new Map<
+    string,
+    {
+      document: vscode.TextDocument;
+      code: string;
+      startLine: number;
+      uri: string;
+      fullContent: string;
+      version: number;
+    }
+  >();
+  private isParsing = false;
   
   constructor(pr: PropsType) {
     this.props = pr;
@@ -31,6 +43,12 @@ export default class DiagnosticInstance {
     this.props.context.subscriptions.push(
       // 用户打开文件时检测
       vscode.workspace.onDidOpenTextDocument(this.updateDiagnostics),
+      // 切换编辑器时检测，避免打开但未编辑的文件漏检
+      vscode.window.onDidChangeActiveTextEditor((editor) => {
+        if (editor) {
+          this.updateDiagnostics(editor.document);
+        }
+      }),
       // 用户修改文件时检测（带防抖）
       vscode.workspace.onDidChangeTextDocument((e) => {
         // 防抖处理，避免频繁更新
@@ -40,18 +58,29 @@ export default class DiagnosticInstance {
       vscode.workspace.onDidCloseTextDocument((doc) => {
         this.diagnosticCollection.delete(doc.uri);
         this.fileCache.delete(doc.uri.toString()); // 清理缓存
+        const uri = doc.uri.toString();
+        const timeout = this.updateTimeouts.get(uri);
+        if (timeout) {
+          clearTimeout(timeout);
+          this.updateTimeouts.delete(uri);
+        }
+        this.pendingParses.delete(uri);
       })
     );
   };
 
   /** 防抖更新 */
   private debouncedUpdate = (document: vscode.TextDocument) => {
-    if (this.updateTimeout) {
-      clearTimeout(this.updateTimeout);
+    const uri = document.uri.toString();
+    const existing = this.updateTimeouts.get(uri);
+    if (existing) {
+      clearTimeout(existing);
     }
-    this.updateTimeout = setTimeout(() => {
+    const timeout = setTimeout(() => {
+      this.updateTimeouts.delete(uri);
       this.updateDiagnostics(document);
     }, this.DEBOUNCE_DELAY);
+    this.updateTimeouts.set(uri, timeout);
   };
   /** 更新检测 */
   updateDiagnostics = (document: vscode.TextDocument) => {
@@ -82,6 +111,7 @@ export default class DiagnosticInstance {
     if (
       cached &&
       cached.content === currentContent &&
+      cached.version === document.version &&
       Date.now() - cached.timestamp < this.CACHE_TTL
     ) {
       // 使用缓存的结果
@@ -104,35 +134,75 @@ export default class DiagnosticInstance {
     }
 
     // 异步解析，避免阻塞UI
-    this.parseCodeAsync(code, document, startLine, uri, currentContent);
+    this.enqueueParse(code, document, startLine, uri, currentContent);
   };
 
-  /** 异步解析代码 */
-  private parseCodeAsync = async (
+  /** 异步解析队列 */
+  private enqueueParse = (
     code: string,
     document: vscode.TextDocument,
     startLine: number,
     uri: string,
     fullContent: string
   ) => {
-    try {
-      // 使用 Promise.resolve().then() 避免阻塞UI线程
-      const diagnostics = await new Promise<vscode.Diagnostic[]>((resolve) => {
-        // 使用 Promise.resolve().then() 在下一个微任务中执行，避免阻塞UI
-        Promise.resolve().then(() => {
-          resolve(analyzeCode(code, document?.uri.path, startLine));
-        });
-      });
+    this.pendingParses.set(uri, {
+      document,
+      code,
+      startLine,
+      uri,
+      fullContent,
+      version: document.version
+    });
+    this.processQueue();
+  };
 
-      // 更新诊断和缓存
-      this.diagnosticCollection.set(document.uri, diagnostics);
-      this.fileCache.set(uri, {
-        content: fullContent,
-        diagnostics,
-        timestamp: Date.now()
-      });
+  private processQueue = async () => {
+    if (this.isParsing) return;
+    this.isParsing = true;
+    try {
+      while (this.pendingParses.size > 0) {
+        const [uri, task] = this.pendingParses.entries().next().value as [
+          string,
+          {
+            document: vscode.TextDocument;
+            code: string;
+            startLine: number;
+            uri: string;
+            fullContent: string;
+            version: number;
+          }
+        ];
+        this.pendingParses.delete(uri);
+
+        if (task.document.version !== task.version) {
+          continue;
+        }
+
+        const diagnostics = await new Promise<vscode.Diagnostic[]>((resolve) => {
+          Promise.resolve().then(() => {
+            resolve(analyzeCode(task.code, task.document?.uri.path, task.startLine));
+          });
+        });
+
+        if (task.document.version !== task.version) {
+          continue;
+        }
+
+        this.diagnosticCollection.set(task.document.uri, diagnostics);
+        this.fileCache.set(task.uri, {
+          content: task.fullContent,
+          diagnostics,
+          timestamp: Date.now(),
+          version: task.version
+        });
+      }
     } catch (error) {
       console.error('解析代码时出错:', error);
+    } finally {
+      this.isParsing = false;
+      if (this.pendingParses.size > 0) {
+        this.processQueue();
+      }
     }
   };
 
