@@ -1,10 +1,10 @@
-import { Diagnostic } from "vscode";
 import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import dealNewExpression from './ast/newExpression';
 // import dealVariableDeclarator from './ast/variableDeclarator';
 import dealCallExpression from './ast/callExpression';
 import handleTypeAnnotation from '../utils/tsTypeToAstNode';
+import { DiagnosticPayload } from "./diagnostic/diagnosticTypes";
 // import dealFucExpression from './ast/functionExpression';
 
 /**
@@ -24,9 +24,9 @@ export function analyzeCode(code: string, url: string, startLine?: number) {
   // 所有变量集合
   const variableTypes = {} as Record<string, Map<string, string>>;
   variableTypes[url] = new Map();
-  const diagnosticsList = [] as Diagnostic[];
+  const diagnosticsList = [] as DiagnosticPayload[];
   /** 处理回调diagnostic列表 */
-  function diagnosticsCallBack (diagnostic?: Diagnostic) {
+  function diagnosticsCallBack (diagnostic?: DiagnosticPayload) {
     if (diagnostic) {
       diagnosticsList.push(diagnostic); 
     }

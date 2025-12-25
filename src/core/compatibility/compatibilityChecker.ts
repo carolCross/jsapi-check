@@ -1,4 +1,4 @@
-import { Diagnostic, DiagnosticSeverity, Range, Position, Uri } from "vscode";
+import { DiagnosticPayload, DiagnosticRange } from "../diagnostic/diagnosticTypes";
 import bcd from "@mdn/browser-compat-data";
 import { BuiltinRootAPIs, WebRootAPIs, WebRootAliases } from "../../utils/constant";
 import { chromeVersion } from "../versionControl";
@@ -183,11 +183,11 @@ function getApiIndex(): Map<string, ApiIndexEntry> {
 }
 
 /** poi => position */
-function generatePoiRange(code: CodePoi) {
-  const startPoi = new Position(code.start.x - 1, code.start.y);
-  const endPoi = new Position(code.end.x - 1, code.end.y);
-  const range = new Range(startPoi, endPoi);
-  return range;
+function generatePoiRange(code: CodePoi): DiagnosticRange {
+  return {
+    start: { line: code.start.x - 1, character: code.start.y },
+    end: { line: code.end.x - 1, character: code.end.y },
+  };
 }
 
 /**
@@ -241,7 +241,7 @@ function showDiagnostics(
   api: TypeDiagnosticsApi | undefined,
   /** 代码高亮位置 如果未传则用字符串兜底去匹配 */
   codePoi?: CodePoi
-): Diagnostic | undefined | void {
+): DiagnosticPayload | undefined | void {
   if (!api) {
     return;
   }
@@ -250,25 +250,16 @@ function showDiagnostics(
     chromeVersion
   );
   if (!support) {
-    function getDiagnostic(codePoi: CodePoi, api: TypeDiagnosticsApi) {
-      if (!codePoi) return console.error("codePoi is null !");
-      const range = generatePoiRange(codePoi);
-      
-      // 创建诊断信息
-      const diagnostic = new Diagnostic(
-        range,
-        `${api.label} not supported in Chrome ${chromeVersion}. Supported in Chrome ${version}.`,
-        DiagnosticSeverity.Error
-      );
-      
-      if (mdnUrl) {
-        diagnostic.code = {
-          value: "MDN参考链接",
-          target: Uri.parse(mdnUrl),
-        };
+    function getDiagnostic(codePoi: CodePoi, api: TypeDiagnosticsApi): DiagnosticPayload {
+      if (!codePoi) {
+        console.error("codePoi is null !");
       }
-      
-      return diagnostic;
+      return {
+        range: generatePoiRange(codePoi),
+        message: `${api.label} not supported in Chrome ${chromeVersion}. Supported in Chrome ${version}.`,
+        severity: "error",
+        mdnUrl,
+      };
     }
     if (codePoi) {
       return getDiagnostic(codePoi, api);
@@ -286,10 +277,10 @@ function checkChromeCompatibility(
   typeName: string,
   /** 代码高亮位置 */
   codePoi: CodePoi
-): Diagnostic | undefined {
+): DiagnosticPayload | undefined {
   const api = getApiIndex().get(typeName);
   const diagnostic = showDiagnostics(code, api, codePoi);
-  return diagnostic as Diagnostic | undefined;
+  return diagnostic as DiagnosticPayload | undefined;
 }
 
 export { checkChromeCompatibility };

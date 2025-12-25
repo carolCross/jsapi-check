@@ -1,8 +1,9 @@
 import { isSupportApi, locToCodePoi } from '../../utils/index';
 import { checkChromeCompatibility } from '../compatibility/compatibilityChecker';
+import { DiagnosticPayload } from "../diagnostic/diagnosticTypes";
 
 /** 处理所有 new方法调用表达式 */
-function dealNewExpression (path: CalleeType, code: string, callBack: (diagnostics: any) => void) {
+function dealNewExpression (path: CalleeType, code: string, callBack: (diagnostics?: DiagnosticPayload) => void) {
     const callee = path.node.callee;
     let typeName;
     if (callee.type === "Identifier") {// 单层
