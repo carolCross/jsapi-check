@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [2.1.0](https://github.com/carolCross/jsapi-check/compare/v2.0.7...v2.1.0) (2025-12-25)
+
+
+
 ## [2.0.7](https://github.com/carolCross/jsapi-check/compare/v2.0.5...v2.0.7) (2025-12-25)
 
 
