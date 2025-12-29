@@ -29,6 +29,8 @@ export const WebRootAliases: Record<string, string> = {
     performance: 'Performance',
     crypto: 'Crypto'
 };
+/** 全局对象前缀（用于 window/globalThis/self.xxx 处理） */
+export const GlobalObjectNames = ['window', 'globalThis', 'self'];
 /** 当前支持检测类型 */
 export const SupportedRootAPIs = [
     ...BuiltinRootAPIs,

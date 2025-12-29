@@ -79,7 +79,7 @@ export function analyzeCode(code: string, url: string, startLine?: number) {
       }
     },
     // 处理所有new方法调用表达式
-    NewExpression: (path: CalleeType) => dealNewExpression(path, code, diagnosticsCallBack),
+    NewExpression: (path: CalleeType) => dealNewExpression(path, code, diagnosticsCallBack, startLine),
     // 分析方法调用表达式
     CallExpression: (path: CalleeType) => dealCallExpression(path, code, diagnosticsCallBack, variableTypes[url], startLine),
     OptionalCallExpression: (path: CalleeType) => dealCallExpression(path, code, diagnosticsCallBack, variableTypes[url], startLine),
