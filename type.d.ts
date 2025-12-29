@@ -1,4 +1,3 @@
-import { Position } from "vscode";
 import { Expression } from '@babel/types';
 
 declare global {
