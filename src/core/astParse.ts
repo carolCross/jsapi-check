@@ -1,11 +1,9 @@
 import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import dealNewExpression from './ast/newExpression';
-// import dealVariableDeclarator from './ast/variableDeclarator';
 import dealCallExpression from './ast/callExpression';
 import handleTypeAnnotation from '../utils/tsTypeToAstNode';
 import { DiagnosticPayload } from "./diagnostic/diagnosticTypes";
-// import dealFucExpression from './ast/functionExpression';
 
 /**
  * 分析code
