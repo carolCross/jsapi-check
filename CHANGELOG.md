@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.1](https://github.com/carolCross/jsapi-check/compare/v2.1.0...v2.1.1) (2025-12-30)
+
+
+### Bug Fixes
+
+* remove log ([ca100f1](https://github.com/carolCross/jsapi-check/commit/ca100f1012ce8d6ee34e934969f2f296f5b0d316))
+* remove log ([93736ab](https://github.com/carolCross/jsapi-check/commit/93736aba32caf0240dd567a60ef817e4f7057e31))
+
+
+### Features
+
+* 修改数据 ([8933c5f](https://github.com/carolCross/jsapi-check/commit/8933c5f0d25dcaede2b71a345695a46632487cfa))
+* 增强类型检测 ([aaff4d3](https://github.com/carolCross/jsapi-check/commit/aaff4d3c1ed3bd032176e72958ad29362da5ffc4))
+
+
+
 # [2.1.0](https://github.com/carolCross/jsapi-check/compare/v2.0.7...v2.1.0) (2025-12-25)
 
 
