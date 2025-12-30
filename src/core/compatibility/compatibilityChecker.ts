@@ -1,40 +1,46 @@
 import { DiagnosticPayload, DiagnosticRange } from "../diagnostic/diagnosticTypes";
 import bcd from "@mdn/browser-compat-data";
-import { BuiltinRootAPIs, WebRootAPIs, WebRootAliases } from "../../utils/constant";
-import { chromeVersion } from "../versionControl";
+import { BrowserLabelMap, BuiltinRootAPIs, WebRootAPIs, WebRootAliases } from "../../utils/constant";
+import type { BrowserTarget } from "../../utils/constant";
+import { browserTarget, browserVersion } from "../versionControl";
 
 type APIInfo = { name: string; path: string };
 type ApiIndexEntry = { label: string; path: string; name: string };
 
 let apiIndexCache: Map<string, ApiIndexEntry> | null = null;
 
-/** support api in Chrome */
-function isSupportedInChrome(
-  apiPath: string,
-  version: number = 30
-): {
+type BrowserSupportResult = {
   /** 是否支持 */
   support: boolean;
   /** mdnUrl  */
   mdnUrl: string | undefined;
   /** 当前版本 */
   version: string[];
-} {
+};
+
+/** support api in target browser */
+function getBrowserSupport(
+  apiPath: string,
+  browser: BrowserTarget,
+  version: number = 30
+): BrowserSupportResult {
   const supportData = apiPath
     .split(".")
     .reduce((obj: any, key) => obj?.[key], bcd);
-  const chromeSupport = supportData?.__compat?.support?.chrome;
-  if (!chromeSupport) {
+  const browserSupport = supportData?.__compat?.support?.[browser];
+  if (!browserSupport) {
     return { support: false, mdnUrl: supportData?.__compat?.mdn_url, version: [] };
   }
 
   const parseVersion = (val: string) => {
-    const parsed = parseFloat(val);
+    const cleaned = val.replace(/^≤\s*/, "");
+    const parsed = parseFloat(cleaned);
     return Number.isNaN(parsed) ? null : parsed;
   };
   const isSupportedEntry = (support: { version_added?: any; version_removed?: any }) => {
     const added = support.version_added;
     if (added === true) return true;
+    if (added === false || added == null) return false;
     if (typeof added === "string") {
       const addedVersion = parseVersion(added);
       if (addedVersion === null) return false;
@@ -48,20 +54,25 @@ function isSupportedInChrome(
     return false;
   };
 
-  if (Array.isArray(chromeSupport)) {
-    const reuslt = chromeSupport.some((support) => isSupportedEntry(support));
+  const toVersionLabel = (value: unknown) => {
+    if (value === true || value == null) return "unknown";
+    return String(value);
+  };
+
+  if (Array.isArray(browserSupport)) {
+    const reuslt = browserSupport.some((support) => isSupportedEntry(support));
     return {
       support: reuslt,
       mdnUrl: supportData?.__compat?.mdn_url,
-      version: chromeSupport.map((support) => support.version_added),
+      version: browserSupport.map((support) => toVersionLabel(support.version_added)),
     };
   }
 
-  const reuslt = isSupportedEntry(chromeSupport);
+  const reuslt = isSupportedEntry(browserSupport);
   return {
     support: reuslt,
     mdnUrl: supportData?.__compat?.mdn_url,
-    version: [chromeSupport.version_added],
+    version: [toVersionLabel(browserSupport.version_added)],
   };
 }
 
@@ -245,18 +256,20 @@ function showDiagnostics(
   if (!api) {
     return;
   }
-  const { support, version, mdnUrl } = isSupportedInChrome(
+  const { support, version, mdnUrl } = getBrowserSupport(
     api.path,
-    chromeVersion
+    browserTarget,
+    browserVersion
   );
   if (!support) {
+    const browserLabel = BrowserLabelMap[browserTarget];
     function getDiagnostic(codePoi: CodePoi, api: TypeDiagnosticsApi): DiagnosticPayload {
       if (!codePoi) {
         console.error("codePoi is null !");
       }
       return {
         range: generatePoiRange(codePoi),
-        message: `${api.label} not supported in Chrome ${chromeVersion}. Supported in Chrome ${version}.`,
+        message: `${api.label} not supported in ${browserLabel} ${browserVersion}. Supported in ${browserLabel} ${version}.`,
         severity: "error",
         mdnUrl,
       };
@@ -272,7 +285,7 @@ function showDiagnostics(
 }
 
 /** 检测浏览器兼容性 */
-function checkChromeCompatibility(
+function checkBrowserCompatibility(
   code: string,
   typeName: string,
   /** 代码高亮位置 */
@@ -283,4 +296,4 @@ function checkChromeCompatibility(
   return diagnostic as DiagnosticPayload | undefined;
 }
 
-export { checkChromeCompatibility };
+export { checkBrowserCompatibility };

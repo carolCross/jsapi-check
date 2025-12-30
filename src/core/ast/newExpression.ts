@@ -1,5 +1,5 @@
 import { isSupportApi, locToCodePoi } from '../../utils/index';
-import { checkChromeCompatibility } from '../compatibility/compatibilityChecker';
+import { checkBrowserCompatibility } from '../compatibility/compatibilityChecker';
 import { DiagnosticPayload } from "../diagnostic/diagnosticTypes";
 import { GlobalObjectNames } from "../../utils/constant";
 
@@ -61,7 +61,7 @@ function dealNewExpression (
   if (!normalizedPath.length || !isSupportApi(normalizedPath[0])) return;
   const typeName = normalizedPath.join(".");
   const codePoi = locToCodePoi(callee?.loc, startLine);
-  const diagnostics = codePoi ? checkChromeCompatibility(code, typeName, codePoi) : undefined;
+  const diagnostics = codePoi ? checkBrowserCompatibility(code, typeName, codePoi) : undefined;
   callBack && callBack(diagnostics);
 }
 

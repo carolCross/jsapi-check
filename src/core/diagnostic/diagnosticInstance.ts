@@ -2,7 +2,8 @@ import * as vscode from "vscode";
 import path from "path";
 import { Worker } from "worker_threads";
 import { DiagnosticCommand, supportLanguageList } from "../../utils/constant";
-import { chromeVersion } from "../versionControl";
+import type { BrowserTarget } from "../../utils/constant";
+import { browserTarget, browserVersion } from "../versionControl";
 import { analyzeCode } from '../astParse';
 import { DiagnosticPayload, DiagnosticSeverityLevel } from "./diagnosticTypes";
 
@@ -26,7 +27,8 @@ export default class DiagnosticInstance {
       diagnostics: vscode.Diagnostic[];
       timestamp: number;
       version: number;
-      chromeVersion: number;
+      browserVersion: number;
+      browserTarget: BrowserTarget;
     }
   >();
   private runId = 0;
@@ -222,7 +224,8 @@ export default class DiagnosticInstance {
           code,
           url,
           startLine,
-          chromeVersion,
+          browserVersion,
+          browserTarget,
         });
       } catch (error) {
         this.workerRequests.delete(id);
@@ -275,7 +278,8 @@ export default class DiagnosticInstance {
       cached &&
       cached.content === currentContent &&
       cached.version === document.version &&
-      cached.chromeVersion === chromeVersion &&
+      cached.browserVersion === browserVersion &&
+      cached.browserTarget === browserTarget &&
       Date.now() - cached.timestamp < this.CACHE_TTL
     ) {
       // 使用缓存的结果
@@ -370,7 +374,8 @@ export default class DiagnosticInstance {
           diagnostics,
           timestamp: Date.now(),
           version: task.version,
-          chromeVersion
+          browserVersion,
+          browserTarget
         });
       }
     } catch (error) {

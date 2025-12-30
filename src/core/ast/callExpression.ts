@@ -1,6 +1,6 @@
 import { DiagnosticPayload } from "../diagnostic/diagnosticTypes";
 import { isSupportApi, locToCodePoi } from "../../utils/index";
-import { checkChromeCompatibility } from "../compatibility/compatibilityChecker";
+import { checkBrowserCompatibility } from "../compatibility/compatibilityChecker";
 import astNodeToJsType from "../../utils/astNodeToJsType";
 import handleTypeAnnotation from '../../utils/tsTypeToAstNode';
 import { GlobalObjectNames } from "../../utils/constant";
@@ -58,7 +58,7 @@ function dealCallExpression(
     if (isSupportApi(typeName)) {
       const codePoi = locToCodePoi(callee?.loc, startLine);
       const diagnostics = codePoi
-        ? checkChromeCompatibility(code, typeName, codePoi)
+        ? checkBrowserCompatibility(code, typeName, codePoi)
         : undefined;
       callBack && callBack(diagnostics);
     }
@@ -73,7 +73,7 @@ function dealCallExpression(
         const directTypeName = normalizedPath.join(".");
         const codePoi = locToCodePoi(callee?.loc, startLine);
         const diagnostics = codePoi
-          ? checkChromeCompatibility(code, directTypeName, codePoi)
+          ? checkBrowserCompatibility(code, directTypeName, codePoi)
           : undefined;
         if (diagnostics) {
           callBack && callBack(diagnostics);
@@ -171,7 +171,7 @@ function dealCallExpression(
       const codePoi = locToCodePoi(callee?.loc, startLine);
       let diagnostics;
       if (codePoi) {
-        diagnostics = checkChromeCompatibility(code, fullTypeName, codePoi);
+        diagnostics = checkBrowserCompatibility(code, fullTypeName, codePoi);
       }
       return diagnostics;
     }
