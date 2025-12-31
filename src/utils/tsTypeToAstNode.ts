@@ -18,8 +18,18 @@ import * as t from '@babel/types';
     case 'TSTypeLiteral':
       return t.objectExpression([]);
     case 'TSUnionType':
-       // @ts-ignore
-      return t.unionTypeAnnotation(typeAnnotation.types.map(handleTypeAnnotation));
+      {
+        const resolved = typeAnnotation.types
+          // @ts-ignore
+          .map(handleTypeAnnotation)
+          .filter(Boolean) as t.Node[];
+        if (!resolved.length) {
+          return t.identifier('unknown');
+        }
+        const firstType = resolved[0].type;
+        const allSame = resolved.every((node) => node.type === firstType);
+        return allSame ? resolved[0] : t.identifier('unknown');
+      }
     case 'TSLiteralType':
       if (t.isStringLiteral(typeAnnotation.literal)) {
         return t.stringLiteral(typeAnnotation.literal.value);
@@ -49,8 +59,18 @@ import * as t from '@babel/types';
     case 'TSFunctionType':
       return t.functionExpression(null, [], t.blockStatement([]));
     case 'TSIntersectionType':
-       // @ts-ignore
-      return t.intersectionTypeAnnotation(typeAnnotation.types.map(handleTypeAnnotation));
+      {
+        const resolved = typeAnnotation.types
+          // @ts-ignore
+          .map(handleTypeAnnotation)
+          .filter(Boolean) as t.Node[];
+        if (!resolved.length) {
+          return t.identifier('unknown');
+        }
+        const firstType = resolved[0].type;
+        const allSame = resolved.every((node) => node.type === firstType);
+        return allSame ? resolved[0] : t.identifier('unknown');
+      }
     case 'TSConditionalType':
       return t.conditionalExpression(
          // @ts-ignore
