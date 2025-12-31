@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.2](https://github.com/carolCross/jsapi-check/compare/v2.1.1...v2.1.2) (2025-12-31)
+
+
+### Bug Fixes
+
+* 修复TSUnionType映射问题 ([6cc512e](https://github.com/carolCross/jsapi-check/commit/6cc512e68110eb4dc2acc53e5eb57dcec6e74dbb))
+
+
+
 ## [2.1.1](https://github.com/carolCross/jsapi-check/compare/v2.1.0...v2.1.1) (2025-12-30)
 
 
