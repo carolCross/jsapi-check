@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [3.0.0](https://github.com/carolCross/jsapi-check/compare/v2.1.1...v3.0.0) (TBD)
+
+* 新增多浏览器支持：Chrome / Safari / Safari iOS
+* 浏览器与版本可切换，保留 Chrome 开发模式（alipayHk/wechat）
+
 ## [2.1.1](https://github.com/carolCross/jsapi-check/compare/v2.1.0...v2.1.1) (2025-12-30)
 
 
