@@ -1,8 +1,15 @@
-import { DefaultVerison } from "../utils/constant";
+import { DefaultBrowser, DefaultBrowserVersionMap } from "../utils/constant";
+import type { BrowserTarget } from "../utils/constant";
 
-export let chromeVersion = DefaultVerison;
+export let browserTarget: BrowserTarget = DefaultBrowser;
+export let browserVersion = DefaultBrowserVersionMap[DefaultBrowser];
 
-/** 设置version */
-export function setChromeVersion (version: number) {
-    chromeVersion = version;
-} 
+/** 设置浏览器类型 */
+export function setBrowserTarget(target: BrowserTarget) {
+    browserTarget = target;
+}
+
+/** 设置版本 */
+export function setBrowserVersion(version: number) {
+    browserVersion = version;
+}

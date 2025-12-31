@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [3.0.0](https://github.com/carolCross/jsapi-check/compare/v2.1.1...v3.0.0) (TBD)
+
+* 新增多浏览器支持：Chrome / Safari / Safari iOS
+* 浏览器与版本可切换，保留 Chrome 开发模式（alipayHk/wechat）
+## [2.1.2](https://github.com/carolCross/jsapi-check/compare/v2.1.1...v2.1.2) (2025-12-31)
+
+
+### Bug Fixes
+
+* 修复TSUnionType映射问题 ([6cc512e](https://github.com/carolCross/jsapi-check/commit/6cc512e68110eb4dc2acc53e5eb57dcec6e74dbb))
+
+
+
+## [2.1.1](https://github.com/carolCross/jsapi-check/compare/v2.1.0...v2.1.1) (2025-12-30)
+
+
+### Bug Fixes
+
+* remove log ([ca100f1](https://github.com/carolCross/jsapi-check/commit/ca100f1012ce8d6ee34e934969f2f296f5b0d316))
+* remove log ([93736ab](https://github.com/carolCross/jsapi-check/commit/93736aba32caf0240dd567a60ef817e4f7057e31))
+
+
+### Features
+
+* 修改数据 ([8933c5f](https://github.com/carolCross/jsapi-check/commit/8933c5f0d25dcaede2b71a345695a46632487cfa))
+* 增强类型检测 ([aaff4d3](https://github.com/carolCross/jsapi-check/commit/aaff4d3c1ed3bd032176e72958ad29362da5ffc4))
+
+
+
 # [2.1.0](https://github.com/carolCross/jsapi-check/compare/v2.0.7...v2.1.0) (2025-12-25)
 
 

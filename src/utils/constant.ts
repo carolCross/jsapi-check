@@ -2,6 +2,19 @@
 
 /** 默认版本 */
 export const DefaultVerison = 69; 
+export type BrowserTarget = "chrome" | "safari" | "safari_ios";
+export const DefaultBrowser: BrowserTarget = "chrome";
+export const BrowserTargets: BrowserTarget[] = ["chrome", "safari", "safari_ios"];
+export const BrowserLabelMap: Record<BrowserTarget, string> = {
+    chrome: "Chrome",
+    safari: "Safari",
+    safari_ios: "Safari iOS"
+};
+export const DefaultBrowserVersionMap: Record<BrowserTarget, number> = {
+    chrome: DefaultVerison,
+    safari: 15,
+    safari_ios: 15
+};
 /** 目前支持检测语言 */
 export const supportLanguageList = [
     'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue'
@@ -29,25 +42,34 @@ export const WebRootAliases: Record<string, string> = {
     performance: 'Performance',
     crypto: 'Crypto'
 };
+/** 全局对象前缀（用于 window/globalThis/self.xxx 处理） */
+export const GlobalObjectNames = ['window', 'globalThis', 'self'];
 /** 当前支持检测类型 */
 export const SupportedRootAPIs = [
     ...BuiltinRootAPIs,
     ...WebRootAPIs,
     ...Object.keys(WebRootAliases)
 ];
-    /** 底部状态栏标题 */
-export const InputStatusBarText = 'Chrome 版本: ';
+/** 底部状态栏标题 */
+export const InputStatusBarText = '版本: ';
 /** 底部状态栏tooltip */
-export const InputStatusTooltip = '更换chrome版本';
+export const InputStatusTooltip = '更换浏览器版本';
 /** 底部状态栏command */
 export const InputStatusCommand = 'jsapi_check.changeChromeVersion';
 
 /** 底部状态栏标题 */
 export const ModeStatusBarText = '当前模式: ';
 /** 底部状态栏tooltip */
-export const ModeStatusTooltip = '请选择开发者模式';
+export const ModeStatusTooltip = '请选择开发者模式（仅 Chrome）';
 /** 底部状态栏command */
 export const ModeStatusCommand = 'jsapi_check.changeMode';
+
+/** 底部状态栏标题 */
+export const BrowserStatusBarText = '浏览器: ';
+/** 底部状态栏tooltip */
+export const BrowserStatusTooltip = '切换目标浏览器';
+/** 底部状态栏command */
+export const BrowserStatusCommand = 'jsapi_check.changeBrowser';
 
 /** 版本控制 */
 export const ModeChromeVersionMap = {

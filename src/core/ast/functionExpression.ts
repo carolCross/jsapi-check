@@ -1,5 +1,5 @@
 import { isSupportApi, locToCodePoi } from "../../utils/index";
-import { checkChromeCompatibility } from "../compatibility/compatibilityChecker";
+import { checkBrowserCompatibility } from "../compatibility/compatibilityChecker";
 import { DiagnosticPayload } from "../diagnostic/diagnosticTypes";
 
 /** 获取字段类型 */
@@ -53,7 +53,7 @@ function dealFucDeclarator(
         const codePoi = locToCodePoi(callee?.loc);
         let diagnostics;
         if (codePoi) {
-          diagnostics = checkChromeCompatibility(code, fullTypeName, codePoi);
+          diagnostics = checkBrowserCompatibility(code, fullTypeName, codePoi);
         }
         return diagnostics;
       }

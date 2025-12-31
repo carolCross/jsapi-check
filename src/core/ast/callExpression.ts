@@ -1,14 +1,46 @@
 import { DiagnosticPayload } from "../diagnostic/diagnosticTypes";
 import { isSupportApi, locToCodePoi } from "../../utils/index";
-import { checkChromeCompatibility } from "../compatibility/compatibilityChecker";
+import { checkBrowserCompatibility } from "../compatibility/compatibilityChecker";
 import astNodeToJsType from "../../utils/astNodeToJsType";
 import handleTypeAnnotation from '../../utils/tsTypeToAstNode';
+import { GlobalObjectNames } from "../../utils/constant";
+
+const globalObjectNameSet = new Set(GlobalObjectNames);
 
 function getMemberPropertyName(member: any): string | null {
   if (!member?.property) return null;
+  if (member.computed && member.property.type !== "StringLiteral") return null;
   if (member.property.type === "Identifier") return member.property.name;
   if (member.property.type === "StringLiteral") return member.property.value;
   return null;
+}
+
+function getMemberPath(member: any): string[] | null {
+  const parts: string[] = [];
+  let current = member;
+  while (current && (current.type === "MemberExpression" || current.type === "OptionalMemberExpression")) {
+    const propertyName = getMemberPropertyName(current);
+    if (!propertyName) return null;
+    parts.unshift(propertyName);
+    const objectNode = current.object;
+    if (objectNode.type === "Identifier") {
+      parts.unshift(objectNode.name);
+      return parts;
+    }
+    if (objectNode.type === "MemberExpression" || objectNode.type === "OptionalMemberExpression") {
+      current = objectNode;
+      continue;
+    }
+    return null;
+  }
+  return null;
+}
+
+function normalizeMemberPath(path: string[]): string[] {
+  if (path.length > 0 && globalObjectNameSet.has(path[0])) {
+    return path.slice(1);
+  }
+  return path;
 }
 
 /** 处理所有 分析方法调用表达式 */
@@ -26,7 +58,7 @@ function dealCallExpression(
     if (isSupportApi(typeName)) {
       const codePoi = locToCodePoi(callee?.loc, startLine);
       const diagnostics = codePoi
-        ? checkChromeCompatibility(code, typeName, codePoi)
+        ? checkBrowserCompatibility(code, typeName, codePoi)
         : undefined;
       callBack && callBack(diagnostics);
     }
@@ -34,6 +66,21 @@ function dealCallExpression(
   }
 
   if (callee.type === "MemberExpression" || callee.type === "OptionalMemberExpression") {
+    const memberPath = getMemberPath(callee);
+    if (memberPath) {
+      const normalizedPath = normalizeMemberPath(memberPath);
+      if (normalizedPath.length && isSupportApi(normalizedPath[0])) {
+        const directTypeName = normalizedPath.join(".");
+        const codePoi = locToCodePoi(callee?.loc, startLine);
+        const diagnostics = codePoi
+          ? checkBrowserCompatibility(code, directTypeName, codePoi)
+          : undefined;
+        if (diagnostics) {
+          callBack && callBack(diagnostics);
+        }
+        return;
+      }
+    }
     const typeName = getMemberPropertyName(callee);
     if (!typeName) return;
     // 检查typeName调用的对象
@@ -124,7 +171,7 @@ function dealCallExpression(
       const codePoi = locToCodePoi(callee?.loc, startLine);
       let diagnostics;
       if (codePoi) {
-        diagnostics = checkChromeCompatibility(code, fullTypeName, codePoi);
+        diagnostics = checkBrowserCompatibility(code, fullTypeName, codePoi);
       }
       return diagnostics;
     }

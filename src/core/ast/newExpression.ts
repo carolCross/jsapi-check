@@ -1,34 +1,68 @@
 import { isSupportApi, locToCodePoi } from '../../utils/index';
-import { checkChromeCompatibility } from '../compatibility/compatibilityChecker';
+import { checkBrowserCompatibility } from '../compatibility/compatibilityChecker';
 import { DiagnosticPayload } from "../diagnostic/diagnosticTypes";
+import { GlobalObjectNames } from "../../utils/constant";
+
+const globalObjectNameSet = new Set(GlobalObjectNames);
+
+function getCalleePath(callee: any): string[] | null {
+  if (callee.type === "Identifier") {
+    return [callee.name];
+  }
+  if (callee.type !== "MemberExpression" && callee.type !== "OptionalMemberExpression") {
+    return null;
+  }
+  const parts: string[] = [];
+  let current = callee;
+  while (current && (current.type === "MemberExpression" || current.type === "OptionalMemberExpression")) {
+    const property = current.property;
+    if (!property) return null;
+    if (current.computed && property.type !== "StringLiteral") return null;
+    const propertyName =
+      property.type === "Identifier"
+        ? property.name
+        : property.type === "StringLiteral"
+          ? property.value
+          : null;
+    if (!propertyName) return null;
+    parts.unshift(propertyName);
+    const objectNode = current.object;
+    if (objectNode.type === "Identifier") {
+      parts.unshift(objectNode.name);
+      return parts;
+    }
+    if (objectNode.type === "MemberExpression" || objectNode.type === "OptionalMemberExpression") {
+      current = objectNode;
+      continue;
+    }
+    return null;
+  }
+  return null;
+}
+
+function normalizeMemberPath(path: string[]): string[] {
+  if (path.length > 0 && globalObjectNameSet.has(path[0])) {
+    return path.slice(1);
+  }
+  return path;
+}
 
 /** 处理所有 new方法调用表达式 */
-function dealNewExpression (path: CalleeType, code: string, callBack: (diagnostics?: DiagnosticPayload) => void) {
-    const callee = path.node.callee;
-    let typeName;
-    if (callee.type === "Identifier") {// 单层
-      typeName = callee.name;
-    } else if (callee.type === "MemberExpression") { // 可以将其看作是new Intl.Locale 两层
-      const propertyName =
-        callee.property?.type === "Identifier"
-          ? callee.property.name
-          : callee.property?.type === "StringLiteral"
-            ? callee.property.value
-            : undefined;
-      if (propertyName) {
-        typeName = `${callee.object?.name}.${propertyName}`;
-      }
-    }
-    if (!typeName) return;
-    const isSupport = isSupportApi(typeName);
-    if (isSupport) {
-        const codePoi = locToCodePoi(callee?.loc);
-        let diagnostics
-        if (codePoi) {
-            diagnostics  = checkChromeCompatibility(code, typeName, codePoi);
-        }
-       callBack && callBack(diagnostics);
-    }
+function dealNewExpression (
+  path: CalleeType,
+  code: string,
+  callBack: (diagnostics?: DiagnosticPayload) => void,
+  startLine?: number
+) {
+  const callee = path.node.callee;
+  const calleePath = getCalleePath(callee);
+  if (!calleePath) return;
+  const normalizedPath = normalizeMemberPath(calleePath);
+  if (!normalizedPath.length || !isSupportApi(normalizedPath[0])) return;
+  const typeName = normalizedPath.join(".");
+  const codePoi = locToCodePoi(callee?.loc, startLine);
+  const diagnostics = codePoi ? checkBrowserCompatibility(code, typeName, codePoi) : undefined;
+  callBack && callBack(diagnostics);
 }
 
 export default dealNewExpression;

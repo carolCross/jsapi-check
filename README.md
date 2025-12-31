@@ -2,7 +2,7 @@
 
 > **智能检测 JavaScript API 浏览器兼容性，让开发更安心**
 
-[![Version](https://img.shields.io/badge/version-2.0.1-blue.svg)](https://marketplace.visualstudio.com/items?itemName=cross.jsapi-check)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=cross.jsapi-check)
 [![Downloads](https://img.shields.io/badge/downloads-90+-green.svg)](https://marketplace.visualstudio.com/items?itemName=cross.jsapi-check)
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg)](./LICENSE.txt)
 
@@ -11,12 +11,18 @@
 | 功能 | 描述 |
 |------|------|
 | 🔍 **智能检测** | 自动分析 JS/TS/Vue 代码中的浏览器兼容性问题 |
-| 🌐 **Chrome 版本检测** | 当前仅支持 Chrome 版本兼容性检测 |
-| 📱 **开发模式切换** | 支持 alipayHk、wechat 等不同开发环境 |
+| 🌍 **多浏览器支持** | 目标浏览器可切换：Chrome / Safari / Safari iOS |
+| 🔧 **版本与模式切换** | 浏览器 + 版本一键切换，Chrome 支持 alipayHk/wechat 模式 |
 | 📚 **MDN 文档链接** | 一键跳转到 MDN 查看详细 API 文档 |
 | 🧩 **内建 + 常用 Web API** | 覆盖内建对象与常见 Web API（如 `fetch` / `URL`） |
 | ⚡ **实时检测** | 代码修改时实时显示兼容性警告 |
 | 🛡️ **性能优化** | 防抖、缓存、大文件保护，避免卡顿 |
+
+## 🆕 v3 版本变化（相对 v2）
+
+- 从仅支持 Chrome 扩展到 **多浏览器目标**（Chrome / Safari / Safari iOS）
+- 支持 **切换浏览器 + 版本**，同一项目可快速验证不同环境兼容性
+- Chrome 保留开发模式（alipayHk/wechat），不影响其它浏览器设置
 
 ## 🎯 支持的文件类型
 
@@ -40,12 +46,12 @@
 3. 输入 `Install from VSIX`
 4. 选择下载的文件
 
-### 2️⃣ 配置浏览器版本
+### 2️⃣ 配置浏览器版本/目标浏览器
 
-- **默认版本**: Chrome 69 (alipayHk 模式)
-- **切换方式**: 右下角状态栏点击切换
-- **支持模式**: alipayHk、wechat 等
-- **配置记忆**: 版本与模式会持久化，重启后保持
+- **默认版本**: Chrome 69 / Safari 15 / Safari iOS 15
+- **切换方式**: 右下角状态栏点击切换（浏览器 + 版本）
+- **支持模式**: alipayHk、wechat 等（仅 Chrome）
+- **配置记忆**: 浏览器、版本与模式会持久化，重启后保持
 
 ### 3️⃣ 开始使用
 
@@ -74,10 +80,10 @@
 
 ## ⚙️ 配置说明
 
-### 浏览器版本设置
-- **Chrome 72**: alipayHk 开发环境
-- **Chrome 73+**: 支持更多现代 API
-- **自定义版本**: 可手动输入任意版本号
+### 浏览器支持与版本设置
+- **Chrome**: 支持开发模式（alipayHk/wechat），可手动输入版本
+- **Safari / Safari iOS**: 可选择目标版本，支持小数（如 16.4）
+- **自定义版本**: 所有浏览器都可输入任意版本号
 
 ### 检测规则
 - 基于 AST 解析，覆盖常见内建对象与 Web API
@@ -86,7 +92,7 @@
 - 只检测当前打开的文件，避免扫描整个工作区
 
 ### 已知限制
-- 当前仅支持 **Chrome** 版本兼容性
+- 当前仅支持 **Chrome / Safari / Safari iOS** 版本兼容性
 - 动态属性/复杂类型推断可能导致漏报或误报
 - Web API 覆盖为常见集合，非完整浏览器 API
 

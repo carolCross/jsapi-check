@@ -1,14 +1,16 @@
 import { parentPort } from "worker_threads";
 import { analyzeCode } from "../astParse";
-import { setChromeVersion } from "../versionControl";
+import { setBrowserTarget, setBrowserVersion } from "../versionControl";
 import { DiagnosticPayload } from "./diagnosticTypes";
+import type { BrowserTarget } from "../../utils/constant";
 
 type WorkerRequest = {
   id: number;
   code: string;
   url: string;
   startLine?: number;
-  chromeVersion: number;
+  browserVersion: number;
+  browserTarget: BrowserTarget;
 };
 
 type WorkerResponse = {
@@ -23,7 +25,8 @@ if (!parentPort) {
 
 parentPort.on("message", (message: WorkerRequest) => {
   try {
-    setChromeVersion(message.chromeVersion);
+    setBrowserTarget(message.browserTarget);
+    setBrowserVersion(message.browserVersion);
     const diagnostics = analyzeCode(message.code, message.url, message.startLine);
     const response: WorkerResponse = { id: message.id, diagnostics };
     parentPort?.postMessage(response);
