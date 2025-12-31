@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [3.0.0](https://github.com/carolCross/jsapi-check/compare/v2.1.2...v3.0.0) (2025-12-31)
+
+
+### Bug Fixes
+
+* conflict resove ([3cf8779](https://github.com/carolCross/jsapi-check/commit/3cf8779094ca64d82ce4e415fdfe9c348641861c))
+* 合并代码 ([bd112c2](https://github.com/carolCross/jsapi-check/commit/bd112c222ada318b2431707f898f46f6c240ff82))
+
+
+
 # [3.0.0](https://github.com/carolCross/jsapi-check/compare/v2.1.1...v3.0.0) (TBD)
 
 * 新增多浏览器支持：Chrome / Safari / Safari iOS
