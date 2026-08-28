@@ -36,11 +36,15 @@ function getMemberPath(member: any): string[] | null {
   return null;
 }
 
-function normalizeMemberPath(path: string[]): string[] {
-  if (path.length > 0 && globalObjectNameSet.has(path[0])) {
+function normalizeMemberPath(path: string[], scope: any): string[] {
+  if (path.length > 0 && globalObjectNameSet.has(path[0]) && !scope.getBinding(path[0])) {
     return path.slice(1);
   }
   return path;
+}
+
+function isUnboundGlobalIdentifier(path: CalleeType, name: string): boolean {
+  return !path.scope.getBinding(name);
 }
 
 /** 处理所有 分析方法调用表达式 */
@@ -55,7 +59,7 @@ function dealCallExpression(
   const { callee } = path.node;
   if (callee.type === "Identifier") {
     const typeName = callee.name;
-    if (isSupportApi(typeName)) {
+    if (isSupportApi(typeName) && isUnboundGlobalIdentifier(path, typeName)) {
       const codePoi = locToCodePoi(callee?.loc, startLine);
       const diagnostics = codePoi
         ? checkBrowserCompatibility(code, typeName, codePoi)
@@ -68,8 +72,12 @@ function dealCallExpression(
   if (callee.type === "MemberExpression" || callee.type === "OptionalMemberExpression") {
     const memberPath = getMemberPath(callee);
     if (memberPath) {
-      const normalizedPath = normalizeMemberPath(memberPath);
-      if (normalizedPath.length && isSupportApi(normalizedPath[0])) {
+      const normalizedPath = normalizeMemberPath(memberPath, path.scope);
+      if (
+        normalizedPath.length &&
+        isSupportApi(normalizedPath[0]) &&
+        isUnboundGlobalIdentifier(path, normalizedPath[0])
+      ) {
         const directTypeName = normalizedPath.join(".");
         const codePoi = locToCodePoi(callee?.loc, startLine);
         const diagnostics = codePoi
@@ -95,7 +103,11 @@ function dealCallExpression(
       const keyType = `${keyLine}${objectNode.name}`;
       if (objectNode.name && variableTypes.has(keyType)) {
         parentType = variableTypes.get(keyType) || objectNode.type;
-      } else if (objectNode.name && isSupportApi(objectNode.name)) {
+      } else if (
+        objectNode.name &&
+        isSupportApi(objectNode.name) &&
+        isUnboundGlobalIdentifier(path, objectNode.name)
+      ) {
         parentType = objectNode.name;
       } else {
         const binding = path.scope.getBinding(objectNode.name);
@@ -129,23 +141,8 @@ function dealCallExpression(
             default:
               break;
           }
-
-          // if (binding.path.node.type === "VariableDeclarator" &&
-          //   binding.path.node.init) {
-          //     const init = binding.path.node.init;
-          //     if (init.type) {
-          //       const newKeyType = `${init.loc.start.line}${objectNode.name}`;
-          //       parentType = variableTypes.get(newKeyType) || init.type;
-          //     }
-          //   } else if ()
         }
       }
-
-      // // 进一步分析，比如检查参数等
-      // if (path.node.arguments.length > 0) {
-      //   const arg = path.node.arguments[0];
-      //   console.log(`${typeName} type1: ${parentType}`, arg);
-      // }
     } else {
       parentType = objectType;
     }

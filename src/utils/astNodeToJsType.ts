@@ -21,43 +21,9 @@ function astNodeToJsType(type: string): string {
       case 'NullLiteral':
           return 'Null';
       case 'RegExpLiteral':
-          return 'Regexp';
-      // case 'Identifier':
-      //     return 'Identifier';
-      // case 'CallExpression':
-      //     return 'Call';
-      // case 'MemberExpression':
-      //     return 'Member';
-      // case 'BinaryExpression':
-      //     return 'Binary';
-      // case 'UnaryExpression':
-      //     return 'Unary';
-      // case 'LogicalExpression':
-      //     return 'Logical';
-      // case 'ConditionalExpression':
-      //     return 'Conditional';
-      // case 'TemplateLiteral':
-      //     return 'Template';
-      // case 'TaggedTemplateExpression':
-      //     return 'TaggedTemplate';
+          return 'RegExp';
       case 'ClassExpression':
           return 'Class';
-      // case 'NewExpression':
-      //     return 'New';
-      // case 'ThisExpression':
-      //     return 'this';
-      // case 'Super':
-      //     return 'super';
-      // case 'MetaProperty':
-      //     return 'metaProperty';
-      // case 'AwaitExpression':
-      //     return 'await';
-      // case 'Import':
-      //     return 'import';
-      // case 'JSXElement':
-      //     return 'jsxElement';
-      // case 'JSXFragment':
-      //     return 'jsxFragment';
       default:
           return 'unknown';
   }

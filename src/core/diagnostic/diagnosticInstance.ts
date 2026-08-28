@@ -7,7 +7,6 @@ import { browserTarget, browserVersion } from "../versionControl";
 import { analyzeCode } from '../astParse';
 import { DiagnosticPayload, DiagnosticSeverityLevel } from "./diagnosticTypes";
 
-/** props */
 type PropsType = {
   /** context 事例 */
   context: vscode.ExtensionContext;
@@ -257,12 +256,16 @@ export default class DiagnosticInstance {
     const lineCount = document.lineCount;
     if (lineCount > 10000) {
       this.log(`跳过大文件检测: ${filePath} (${lineCount} 行)`);
+      this.diagnosticCollection.delete(document.uri);
+      this.fileCache.delete(uri);
       return;
     }
 
     // 性能保护：对于 node_modules 中的文件，增加额外的行数限制
     if (document.uri.path.includes('node_modules') && lineCount > 5000) {
       this.log(`跳过大型 node_modules 文件: ${filePath} (${lineCount} 行)`);
+      this.diagnosticCollection.delete(document.uri);
+      this.fileCache.delete(uri);
       return;
     }
 

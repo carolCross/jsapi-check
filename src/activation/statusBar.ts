@@ -47,13 +47,15 @@ export default class StatusBar {
   private getVersionStorageKey = (browser: BrowserTarget) => `jsapi-check.browserVersion.${browser}`;
 
   private resolveBrowserVersion = (browser: BrowserTarget) => {
-    if (browser === "chrome" && ModeChromeVersionMap[this.currentMode]) {
-      return ModeChromeVersionMap[this.currentMode];
-    }
     const storedVersion = this.props.context.globalState.get<number>(this.getVersionStorageKey(browser));
     if (typeof storedVersion === "number") {
       return storedVersion;
     }
+
+    if (browser === "chrome" && ModeChromeVersionMap[this.currentMode]) {
+      return ModeChromeVersionMap[this.currentMode];
+    }
+
     if (browser === "chrome") {
       const legacyVersion = this.props.context.globalState.get<number>("jsapi-check.chromeVersion");
       if (typeof legacyVersion === "number") {
